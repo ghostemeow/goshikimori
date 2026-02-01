@@ -7,7 +7,7 @@ const (
 	CUSTOM_MAX_EXPECTATION_GRAPHQL      time.Duration = 1
 	CUSTOM_MAX_EXPECTATION_ACTIVE_USERS time.Duration = 40
 
-	SITE string = "https://shikimori.one/api/"
+	SITE string = "https://shiki.one/api/"
 
 	TARGET_TYPE_ANIME string = "Anime"
 	TARGET_TYPE_MANGA string = "Manga"
