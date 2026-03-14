@@ -32,8 +32,7 @@ func sendRequest(req *http.Request) ([]byte, int, error) {
 }
 
 // Normal GET request with User-Agent only.
-func NewGetRequestWithCancel(application, search string,
-	number time.Duration) ([]byte, int, error) {
+func NewGetRequestWithCancel(application, search string, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -52,8 +51,7 @@ func NewGetRequestWithCancel(application, search string,
 }
 
 // For certain GET requests where a Bearer is needed.
-func NewGetRequestWithCancelAndBearer(application, accessToken, search string,
-	number time.Duration) ([]byte, int, error) {
+func NewGetRequestWithCancelAndBearer(application, accessToken, search string, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -74,8 +72,7 @@ func NewGetRequestWithCancelAndBearer(application, accessToken, search string,
 
 // To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
-func NewPostRequestWithCancel(application, accessToken, search string,
-	number time.Duration) ([]byte, int, error) {
+func NewPostRequestWithCancel(application, accessToken, search string, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -97,8 +94,7 @@ func NewPostRequestWithCancel(application, accessToken, search string,
 
 // GraphQL: POST request.
 // For GraphQL you only need User-Agent at POST request.
-func NewGraphQLPostRequestWithCancel(application, search string,
-	number time.Duration) ([]byte, int, error) {
+func NewGraphQLPostRequestWithCancel(application, search string, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -119,8 +115,7 @@ func NewGraphQLPostRequestWithCancel(application, search string,
 
 // Reorder: POST request. To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
-func NewReorderPostRequestWithCancel(application, accessToken, search string,
-	position int, number time.Duration) ([]byte, int, error) {
+func NewReorderPostRequestWithCancel(application, accessToken, search string, position int, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -147,8 +142,7 @@ func NewReorderPostRequestWithCancel(application, accessToken, search string,
 
 // Mark order messages: POST request. To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
-func NewMarkReadPostRequestWithCancel(application, accessToken, search, ids string,
-	is_read int, number time.Duration) ([]byte, int, error) {
+func NewMarkReadPostRequestWithCancel(application, accessToken, search, ids string, is_read int, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -176,8 +170,7 @@ func NewMarkReadPostRequestWithCancel(application, accessToken, search, ids stri
 
 // Read/Delete all messages: POST request. To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
-func NewReadDeleteAllPostRequestWithCancel(application, accessToken, search, name string,
-	number time.Duration) ([]byte, int, error) {
+func NewReadDeleteAllPostRequestWithCancel(application, accessToken, search, name string, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -205,8 +198,7 @@ func NewReadDeleteAllPostRequestWithCancel(application, accessToken, search, nam
 
 // Send message: POST request. To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
-func NewSendMessagePostRequestWithCancel(application, accessToken, search, body string,
-	from_id, to_id int, number time.Duration) ([]byte, int, error) {
+func NewSendMessagePostRequestWithCancel(application, accessToken, search, body string, from_id, to_id int, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -235,8 +227,7 @@ func NewSendMessagePostRequestWithCancel(application, accessToken, search, body 
 
 // Change message. To work correctly with the PUT method,
 // make sure that your application has all the necessary permissions.
-func NewChangeMessagePutRequestWithCancel(application, accessToken, search, body string,
-	number time.Duration) ([]byte, int, error) {
+func NewChangeMessagePutRequestWithCancel(application, accessToken, search, body string, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -264,8 +255,7 @@ func NewChangeMessagePutRequestWithCancel(application, accessToken, search, body
 
 // Delete message. To work correctly with the DELETE method,
 // make sure that your application has all the necessary permissions.
-func NewDeleteMessageDeleteRequestWithCancel(application, accessToken, search string,
-	number time.Duration) ([]byte, int, error) {
+func NewDeleteMessageDeleteRequestWithCancel(application, accessToken, search string, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 
@@ -287,8 +277,7 @@ func NewDeleteMessageDeleteRequestWithCancel(application, accessToken, search st
 
 // To work correctly with the DELETE method,
 // make sure that your application has all the necessary permissions.
-func NewDeleteRequestWithCancel(application, accessToken, search string,
-	number time.Duration) ([]byte, int, error) {
+func NewDeleteRequestWithCancel(application, accessToken, search string, number time.Duration) ([]byte, int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
 	defer cancel()
 

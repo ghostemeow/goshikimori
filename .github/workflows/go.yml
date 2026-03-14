@@ -16,5 +16,7 @@ jobs:
         run: go test -v -run TestLanguageCheck
       - name: Configuration tests
         run: go test -v configuration_test.go configuration.go
+      - name: Request tests
+        run: go test -v req_test.go req.go
       - name: Concatination tests
         run: go test -v ./concat

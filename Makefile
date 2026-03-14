@@ -36,19 +36,19 @@ fmt:
 	gofmt -w .
 
 graphql-request:
-	curl -X POST https://shikimori.one/api/graphql \
+	curl -X POST https://shikimori.io/api/graphql \
 	-H "User-Agent: $(App)" \
 	-H "Authorization: Bearer $(Token)" \
 	-H 'Content-Type: application/json' \
 	-d '{"query": "{ animes(search: \"initial d first stage\", limit: 1) { id name russian english japanese score status episodes description } }"}'
 
 request:
-	curl -X GET https://shikimori.one/api/animes?search=death+note&genre \
+	curl -X GET https://shikimori.io/api/animes?search=death+note&genre \
 	-H "User-Agent: $(App)" \
 	-H "Authorization: Bearer $(Token)"
 
 token:
-	curl -X POST "https://shikimori.one/oauth/token" \
+	curl -X POST "https://shikimori.io/oauth/token" \
 	-H "User-Agent: $(App)" \
 	-F grant_type="refresh_token" \
 	-F client_id="$(client_id)" \
@@ -56,7 +56,7 @@ token:
 	-F refresh_token="$(refresh)"
 
 auth:
-	curl -X POST "https://shikimori.one/oauth/token" \
+	curl -X POST "https://shikimori.io/oauth/token" \
 	-H "User-Agent: $(App)" \
 	-F grant_type="authorization_code" \
 	-F client_id="$(client_id)" \
