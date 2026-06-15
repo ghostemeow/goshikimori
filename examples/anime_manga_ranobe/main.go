@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	g "github.com/heycatch/goshikimori"
-	"github.com/heycatch/goshikimori/consts"
+	g "github.com/ghostemeow/goshikimori"
+	"github.com/ghostemeow/goshikimori/constants"
 )
 
 func config() *g.Configuration {
@@ -34,8 +34,8 @@ func foundAnime() {
 func foundAnimes() {
 	c := config()
 	o := &g.Options{
-		Page: 1, Limit: 5, Status: consts.ANIME_STATUS_RELEASED,
-		Season: consts.SEASON_199x, Mylist: consts.MY_LIST_COMPLETED,
+		Page: 1, Limit: 5, Status: constants.ANIME_STATUS_RELEASED,
+		Season: constants.SEASON_199x, Mylist: constants.MY_LIST_COMPLETED,
 	}
 	a, status, err := c.SearchAnimes("initial d", o)
 	if status != 200 || err != nil {
@@ -72,8 +72,8 @@ func foundManga() {
 func foundMangas() {
 	c := config()
 	o := &g.Options{
-		Page: 1, Limit: 1, Status: consts.MANGA_STATUS_RELEASED,
-		Season: consts.SEASON_199x, Score: 8, Censored: false,
+		Page: 1, Limit: 1, Status: constants.MANGA_STATUS_RELEASED,
+		Season: constants.SEASON_199x, Score: 8, Censored: false,
 	}
 	m, status, err := c.SearchMangas("initial d", o)
 	if status != 200 || err != nil {
@@ -110,8 +110,8 @@ func foundRanobe() {
 func foundRanobes() {
 	c := config()
 	o := &g.Options{
-		Page: 1, Limit: 10, Order: consts.MANGA_ORDER_POPULARITY,
-		Status: consts.MANGA_STATUS_RELEASED, Mylist: consts.MY_LIST_PLANNED,
+		Page: 1, Limit: 10, Order: constants.MANGA_ORDER_POPULARITY,
+		Status: constants.MANGA_STATUS_RELEASED, Mylist: constants.MY_LIST_PLANNED,
 	}
 	r, status, err := c.SearchRanobes("angel", o)
 	if status != 200 || err != nil {

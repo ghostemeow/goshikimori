@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/heycatch/goshikimori/concat"
-	"github.com/heycatch/goshikimori/consts"
+	"github.com/ghostemeow/goshikimori/constants"
+	"github.com/ghostemeow/goshikimori/genres"
 )
 
 type Configuration struct {
@@ -24,16 +24,16 @@ type FastId struct {
 //
 // More information can be found in the [example1] and [example2].
 //
-// [example1]: https://github.com/heycatch/goshikimori/blob/master/examples/custom_fastid
-// [example2]: https://github.com/heycatch/goshikimori/blob/master/examples/getter_setter
+// [example1]: https://github.com/ghostemeow/goshikimori/blob/master/examples/custom_fastid
+// [example2]: https://github.com/ghostemeow/goshikimori/blob/master/examples/getter_setter
 func (f *FastId) GetFastId() int { return f.Id }
 
 // To create a custom id(anime, manga, ranobe, user, person, group).
 //
 // More information can be found in the [example1] and [example2].
 //
-// [example1]: https://github.com/heycatch/goshikimori/blob/master/examples/custom_fastid
-// [example2]: https://github.com/heycatch/goshikimori/blob/master/examples/getter_setter
+// [example1]: https://github.com/ghostemeow/goshikimori/blob/master/examples/custom_fastid
+// [example2]: https://github.com/ghostemeow/goshikimori/blob/master/examples/getter_setter
 func (c *Configuration) SetFastId(id int) *FastId {
 	return &FastId{Id: id, Conf: *c, Err: nil}
 }
@@ -42,7 +42,7 @@ func (c *Configuration) SetFastId(id int) *FastId {
 //
 // More information can be found in the [example].
 //
-// [example]: https://github.com/heycatch/goshikimori/blob/master/examples/getter_setter
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/getter_setter
 func (c *Configuration) GetConfiguration() (string, string) {
 	return c.Application, c.AccessToken
 }
@@ -51,8 +51,8 @@ func (c *Configuration) GetConfiguration() (string, string) {
 //
 // More information can be found in the [example].
 //
-// [OAuth]: https://github.com/heycatch/goshikimori/blob/master/examples/first_steps
-// [example]: https://github.com/heycatch/goshikimori/blob/master/examples/getter_setter
+// [OAuth]: https://github.com/ghostemeow/goshikimori/blob/master/examples/first_steps
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/getter_setter
 func SetConfiguration(appname, token string) *Configuration {
 	return &Configuration{Application: appname, AccessToken: token}
 }
@@ -109,12 +109,12 @@ type Result interface {
 	OptionsTopicsHotV2()     string
 }
 
-// TODO: (heycatch) abandon url.QueryEscape in the future.
+// TODO: (ghostemeow) abandon url.QueryEscape in the future.
 func encodeParamEscaped(key, value string) string {
 	return url.QueryEscape(key) + "=" + url.QueryEscape(value)
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsOnlyPageLimit(page, limit int) string {
 	v := url.Values{}
 
@@ -148,7 +148,7 @@ func (o *Options) OptionsOnlyPageLimitV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsTopics() string {
 	v := url.Values{}
 
@@ -194,7 +194,7 @@ func (o *Options) OptionsTopicsV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsMessages() string {
 	v := url.Values{}
 
@@ -206,7 +206,7 @@ func (o *Options) OptionsMessages() string {
 	}
 	// The type is required.
 	if o.Type == "" {
-		v.Add("type", consts.MESSAGE_TYPE_NEWS)
+		v.Add("type", constants.MESSAGE_TYPE_NEWS)
 	} else {
 		v.Add("type", o.Type)
 	}
@@ -235,7 +235,7 @@ func (o *Options) OptionsMessagesV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsUserHistory() string {
 	v := url.Values{}
 
@@ -278,7 +278,7 @@ func (o *Options) OptionsUserHistoryV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsAnime() string {
 	v := url.Values{}
 
@@ -314,7 +314,7 @@ func (o *Options) OptionsAnime() string {
 	}
 	v.Add("censored", strconv.FormatBool(o.Censored))
 
-	genre := concat.MapGenresAnime(o.Genre_v2)
+	genre := genres.MapGenresAnime(o.Genre_v2)
 	if genre != "" {
 		v.Add("genre_v2", genre)
 	}
@@ -345,7 +345,7 @@ func (o *Options) OptionsAnimeV2() string {
 	} else {
 		pairs = append(pairs, encodeParamEscaped("censored", "false"))
 	}
-	if genre := concat.MapGenresAnime(o.Genre_v2); genre != "" {
+	if genre := genres.MapGenresAnime(o.Genre_v2); genre != "" {
 		pairs = append(pairs, encodeParamEscaped("genre_v2", genre))
 	}
 
@@ -368,7 +368,7 @@ func (o *Options) OptionsAnimeV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsManga() string {
 	v := url.Values{}
 
@@ -398,7 +398,7 @@ func (o *Options) OptionsManga() string {
 	}
 	v.Add("censored", strconv.FormatBool(o.Censored))
 
-	genre := concat.MapGenresManga(o.Genre_v2)
+	genre := genres.MapGenresManga(o.Genre_v2)
 	if genre != "" {
 		v.Add("genre_v2", genre)
 	}
@@ -427,7 +427,7 @@ func (o *Options) OptionsMangaV2() string {
 	} else {
 		pairs = append(pairs, encodeParamEscaped("censored", "false"))
 	}
-	if genre := concat.MapGenresAnime(o.Genre_v2); genre != "" {
+	if genre := genres.MapGenresAnime(o.Genre_v2); genre != "" {
 		pairs = append(pairs, encodeParamEscaped("genre_v2", genre))
 	}
 
@@ -450,7 +450,7 @@ func (o *Options) OptionsMangaV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsRanobe() string {
 	v := url.Values{}
 
@@ -477,7 +477,7 @@ func (o *Options) OptionsRanobe() string {
 	}
 	v.Add("censored", strconv.FormatBool(o.Censored))
 
-	genre := concat.MapGenresManga(o.Genre_v2)
+	genre := genres.MapGenresManga(o.Genre_v2)
 	if genre != "" {
 		v.Add("genre_v2", genre)
 	}
@@ -506,7 +506,7 @@ func (o *Options) OptionsRanobeV2() string {
 	} else {
 		pairs = append(pairs, encodeParamEscaped("censored", "false"))
 	}
-	if genre := concat.MapGenresAnime(o.Genre_v2); genre != "" {
+	if genre := genres.MapGenresAnime(o.Genre_v2); genre != "" {
 		pairs = append(pairs, encodeParamEscaped("genre_v2", genre))
 	}
 
@@ -529,7 +529,7 @@ func (o *Options) OptionsRanobeV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsCalendar() string {
 	v := url.Values{}
 
@@ -558,7 +558,7 @@ func (o *Options) OptionsCalendarV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsAnimeRates() string {
 	v := url.Values{}
 
@@ -602,7 +602,7 @@ func (o *Options) OptionsAnimeRatesV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsMangaRates() string {
 	v := url.Values{}
 
@@ -617,7 +617,7 @@ func (o *Options) OptionsMangaRates() string {
 	return v.Encode()
 }
 
-// FIXME: (heycatch) The manga has no status, ranobe is missing.
+// FIXME: (ghostemeow) The manga has no status, ranobe is missing.
 // https://shikimori.one/api/doc/1.0/users/manga_rates.html
 func (o *Options) OptionsMangaRatesV2() string {
 	var numBuf []byte
@@ -644,7 +644,7 @@ func (o *Options) OptionsMangaRatesV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsPeople() string {
 	v := url.Values{}
 
@@ -671,7 +671,7 @@ func (o *Options) OptionsPeopleV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsTopicsHot() string {
 	v := url.Values{}
 
@@ -700,7 +700,7 @@ func (o *Options) OptionsTopicsHotV2() string {
 	return sb.String()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsRandomAnime() string {
 	v := url.Values{}
 
@@ -730,7 +730,7 @@ func (o *Options) OptionsRandomAnime() string {
 	}
 	v.Add("censored", strconv.FormatBool(o.Censored))
 
-	genre := concat.MapGenresAnime(o.Genre_v2)
+	genre := genres.MapGenresAnime(o.Genre_v2)
 	if genre != "" {
 		v.Add("genre_v2", genre)
 	}
@@ -738,7 +738,7 @@ func (o *Options) OptionsRandomAnime() string {
 	return v.Encode()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsRandomManga() string {
 	v := url.Values{}
 
@@ -762,7 +762,7 @@ func (o *Options) OptionsRandomManga() string {
 	}
 	v.Add("censored", strconv.FormatBool(o.Censored))
 
-	genre := concat.MapGenresManga(o.Genre_v2)
+	genre := genres.MapGenresManga(o.Genre_v2)
 	if genre != "" {
 		v.Add("genre_v2", genre)
 	}
@@ -770,7 +770,7 @@ func (o *Options) OptionsRandomManga() string {
 	return v.Encode()
 }
 
-// NOTE: (heycatch) DEPRECATED and will be removed from future versions.
+// NOTE: (ghostemeow) DEPRECATED and will be removed from future versions.
 func (o *Options) OptionsRandomRanobe() string {
 	v := url.Values{}
 
@@ -791,7 +791,7 @@ func (o *Options) OptionsRandomRanobe() string {
 	}
 	v.Add("censored", strconv.FormatBool(o.Censored))
 
-	genre := concat.MapGenresManga(o.Genre_v2)
+	genre := genres.MapGenresManga(o.Genre_v2)
 	if genre != "" {
 		v.Add("genre_v2", genre)
 	}

@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"strconv"
+	"strings"
 
-	g "github.com/heycatch/goshikimori"
-	"github.com/heycatch/goshikimori/concat"
-	"github.com/heycatch/goshikimori/consts"
+	g "github.com/ghostemeow/goshikimori"
+	"github.com/ghostemeow/goshikimori/constants"
 )
 
 func config() *g.Configuration {
@@ -24,7 +26,7 @@ func readMessage() {
 		return
 	}
 	messages, status, err := fast.UserMessages(&g.Options{
-		Type: consts.MESSAGE_TYPE_INBOX, Page: 1, Limit: 10,
+		Type: constants.MESSAGE_TYPE_INBOX, Page: 1, Limit: 10,
 	})
 	if status != 200 || err != nil {
 		fmt.Println(err)
@@ -49,7 +51,7 @@ func readMessage() {
 		return
 	}
 	for _, v := range d {
-		if v.Message.Kind == consts.MESSAGE_TYPE_PRIVATE && v.Message.Body != "" {
+		if v.Message.Kind == constants.MESSAGE_TYPE_PRIVATE && v.Message.Body != "" {
 			message, status, err := c.ReadMessage(v.Message.Id)
 			if status != 200 || err != nil {
 				fmt.Println(status, err)
@@ -112,7 +114,7 @@ func changeMesage() {
 		return
 	}
 	for _, v := range d {
-		if v.Message.Kind == consts.MESSAGE_TYPE_PRIVATE && v.Message.Body != "" {
+		if v.Message.Kind == constants.MESSAGE_TYPE_PRIVATE && v.Message.Body != "" {
 			new_message := "changed the message from API :)"
 			message, status, err := c.ChangeMessage(v.Message.Id, new_message)
 			if status != 200 || err != nil {
@@ -136,7 +138,7 @@ func deleteMessage() {
 		return
 	}
 	for _, v := range d {
-		if v.Message.Kind == consts.MESSAGE_TYPE_PRIVATE && v.Message.Body != "" {
+		if v.Message.Kind == constants.MESSAGE_TYPE_PRIVATE && v.Message.Body != "" {
 			status, err := c.DeleteMessage(v.Message.Id)
 			if status != 204 || err != nil {
 				fmt.Println(status, err)
@@ -145,6 +147,15 @@ func deleteMessage() {
 			fmt.Println(status) // only status 204 is returned
 		}
 	}
+}
+
+func idsToString(slice []int) string {
+	var res bytes.Buffer
+	for i := range slice {
+		res.WriteString(strconv.Itoa(slice[i]))
+		res.WriteString(",")
+	}
+	return strings.TrimSuffix(res.String(), ",")
 }
 
 func markReadUnreadMessages() {
@@ -165,7 +176,7 @@ func markReadUnreadMessages() {
 	}
 
 	messages, status, err := fast.UserMessages(&g.Options{
-		Type: consts.MESSAGE_TYPE_INBOX, Page: 1, Limit: 10,
+		Type: constants.MESSAGE_TYPE_INBOX, Page: 1, Limit: 10,
 	})
 	if status != 200 || err != nil {
 		fmt.Println(err)
@@ -184,7 +195,7 @@ func markReadUnreadMessages() {
 		}
 	}
 
-	read, err := c.MarkReadMessages(concat.IdsToString(ids), 1)
+	read, err := c.MarkReadMessages(idsToString(ids), 1)
 	if err != nil {
 		fmt.Println(err)
 		return

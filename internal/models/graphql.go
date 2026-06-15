@@ -1,4 +1,4 @@
-package api
+package models
 
 type GraphQL struct {
 	Data   Data             `json:"data"`

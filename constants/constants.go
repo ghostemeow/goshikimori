@@ -1,10 +1,10 @@
-package consts
+package constants
 
 import "time"
 
 const (
 	MAX_EXPECTATION                     = 10 * time.Second
-	CUSTOM_MAX_EXPECTATION_GRAPHQL      = 1 * time.Second
+	CUSTOM_MAX_EXPECTATION_GRAPHQL      = 1  * time.Second
 	CUSTOM_MAX_EXPECTATION_ACTIVE_USERS = 40 * time.Second
 
 	SITE = "https://shikimori.io/api/"

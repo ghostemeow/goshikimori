@@ -1,4 +1,20 @@
-package api
+package genres
+
+import (
+	"bytes"
+	"strconv"
+	"strings"
+
+	"github.com/ghostemeow/goshikimori/internal/concatination"
+)
+
+type Genres struct {
+	Id         int    `json:"id"`
+	Name       string `json:"name"`
+	Russian    string `json:"russian"`
+	Kind       string `json:"kind"`
+	Entry_type string `json:"entry_type"`
+}
 
 var (
 	// genre v2.
@@ -102,3 +118,70 @@ var (
 		544: "544-Gourmet",
 	}
 )
+
+// Write key to slice and check for duplicates.
+func checkForDuplicates(target int, slice []int) bool {
+	for i := 0; i < 50; i++ {
+		if slice[i] == target {
+			return false
+		}
+	}
+	return true
+}
+
+// Anime value map search.
+func MapGenresAnime(slice []int) string {
+	var res bytes.Buffer
+	var count int
+	tempSlice := make([]int, 50)
+
+	for i := 0; i < len(slice); i++ {
+		_, ok := GenreAnime[slice[i]]
+		if ok && checkForDuplicates(slice[i], tempSlice) {
+			res.WriteString(GenreAnime[slice[i]])
+			res.WriteString(",")
+			tempSlice[count] = slice[i]
+			count++
+		}
+	}
+
+	return strings.TrimSuffix(res.String(), ",")
+}
+
+// Manga value map search.
+func MapGenresManga(slice []int) string {
+	var res bytes.Buffer
+	var count int
+	tempSlice := make([]int, 50)
+
+	for i := 0; i < len(slice); i++ {
+		_, ok := GenreManga[slice[i]]
+		if ok && checkForDuplicates(slice[i], tempSlice) {
+			res.WriteString(GenreManga[slice[i]])
+			res.WriteString(",")
+			tempSlice[count] = slice[i]
+			count++
+		}
+	}
+
+	return strings.TrimSuffix(res.String(), ",")
+}
+
+// Auxiliary function to get the correct list of genres.
+//
+// name:
+//
+// > GENERATE_GENRES_ANIME, GENERATE_GENRES_MANGA;
+//
+// genres: []genres.Genres;
+func GenerateGenres(name string, genres []Genres) map[int]string {
+	data := make(map[int]string)
+	for _, v := range genres {
+		if v.Entry_type == name {
+			data[v.Id] = string(concatination.DataBuffer(
+				[]string{strconv.Itoa(v.Id), "-", name},
+			))
+		}
+	}
+	return data
+}

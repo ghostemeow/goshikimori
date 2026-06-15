@@ -1,4 +1,4 @@
-package api
+package models
 
 import "time"
 
@@ -480,14 +480,6 @@ type ExternalLinks struct {
 	Created_at  time.Time `json:"created_at"`
 	Updated_at  time.Time `json:"updated_at"`
 	Imported_at time.Time `json:"imported_at"`
-}
-
-type Genres struct {
-	Id         int    `json:"id"`
-	Name       string `json:"name"`
-	Russian    string `json:"russian"`
-	Kind       string `json:"kind"`
-	Entry_type string `json:"entry_type"`
 }
 
 // # Removed:

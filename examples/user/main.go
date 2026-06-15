@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	g "github.com/heycatch/goshikimori"
-	"github.com/heycatch/goshikimori/consts"
+	g "github.com/ghostemeow/goshikimori"
+	"github.com/ghostemeow/goshikimori/constants"
 )
 
 func config() *g.Configuration {
@@ -58,7 +58,7 @@ func main() {
 		fmt.Println(v.Id, v.Nickname, v.Last_online_at)
 	}
 	// search anime and manga rates
-	oar := &g.Options{Page: 1, Limit: 5, Status: consts.MY_LIST_COMPLETED, Censored: true}
+	oar := &g.Options{Page: 1, Limit: 5, Status: constants.MY_LIST_COMPLETED, Censored: true}
 	ar, status, err := fast.SearchUserAnimeRates(oar)
 	if status != 200 || err != nil || len(ar) == 0 {
 		fmt.Println(status, err)
@@ -89,7 +89,7 @@ func main() {
 		fmt.Println(v.Id, v.Name, v.Russian, v.Image)
 	}
 	// user history
-	ouh := &g.Options{Page: 1, Limit: 10, Target_id: 33206, Target_type: consts.TARGET_TYPE_ANIME}
+	ouh := &g.Options{Page: 1, Limit: 10, Target_id: 33206, Target_type: constants.TARGET_TYPE_ANIME}
 	uh, status, err := fast.SearchUserHistory(ouh)
 	if status != 200 || err != nil || len(uh) == 0 {
 		fmt.Println(status, err)

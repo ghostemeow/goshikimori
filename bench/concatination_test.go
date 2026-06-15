@@ -3,13 +3,14 @@ package bench
 import (
 	"testing"
 
-	"github.com/heycatch/goshikimori/concat"
+	"github.com/ghostemeow/goshikimori/internal/concatination"
+	"github.com/ghostemeow/goshikimori/genres"
 )
 
 func BenchmarkIdsToString(b *testing.B) {
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_ = concat.IdsToString([]int{1336, 1337, 1338, 1339, 1400})
+		_ = concatination.IdsToString([]int{1336, 1337, 1338, 1339, 1400})
 	}
 	b.StopTimer()
 }
@@ -17,7 +18,7 @@ func BenchmarkIdsToString(b *testing.B) {
 func BenchmarkUrl(b *testing.B) {
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_ = concat.Url(46, []string{"https://shikimori.one/api/", "users/", "search=arctica"})
+		_ = concatination.Url(46, []string{"https://shikimori.one/api/", "users/", "search=arctica"})
 	}
 	b.StopTimer()
 }
@@ -25,7 +26,7 @@ func BenchmarkUrl(b *testing.B) {
 func BenchmarkGenresAnime(b *testing.B) {
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_ = concat.MapGenresAnime([]int{2, 14, 10, 10, 12})
+		_ = genres.MapGenresAnime([]int{2, 14, 10, 10, 12})
 	}
 	b.StopTimer()
 }
@@ -33,7 +34,7 @@ func BenchmarkGenresAnime(b *testing.B) {
 func BenchmarkGenresManga(b *testing.B) {
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_ = concat.MapGenresManga([]int{49, 59, 51, 51, 73})
+		_ = genres.MapGenresManga([]int{49, 59, 51, 51, 73})
 	}
 	b.StopTimer()
 }

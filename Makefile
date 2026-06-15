@@ -26,7 +26,10 @@ docker: docker-build docker-start
 
 test:
 	go test -v
-	go test -v ./concat
+	go test -v ./internal/request
+	go test -v ./internal/concatination
+	go test -v ./neko
+	go test -v ./genres
 	go vet .
 
 bench:

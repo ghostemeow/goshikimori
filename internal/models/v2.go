@@ -1,4 +1,4 @@
-package api
+package models
 
 type IgnoreUser struct {
 	User_id    string `json:"user_id"`

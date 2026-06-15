@@ -1,4 +1,4 @@
-package goshikimori
+package request
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/heycatch/goshikimori/concat"
+	"github.com/ghostemeow/goshikimori/internal/concatination"
 )
 
 func TestNewGetRequestWithCancel(t *testing.T) {
@@ -239,7 +239,7 @@ func TestNewMarkReadPostRequestWithCancel(t *testing.T) {
 
 	data, status, err := NewMarkReadPostRequestWithCancel(
 		"test-app", "test-token", server.URL,
-		concat.IdsToString([]int{123, 456, 789}), 1337, 5 * time.Second,
+		concatination.IdsToString([]int{123, 456, 789}), 1337, 5 * time.Second,
 	)
 	if err != nil {
 		t.Fatal(err)

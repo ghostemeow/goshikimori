@@ -1,4 +1,4 @@
-package goshikimori
+package request
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/heycatch/goshikimori/concat"
+	"github.com/ghostemeow/goshikimori/internal/concatination"
 )
 
 // Return the date as bytes.
@@ -60,7 +60,7 @@ func NewGetRequestWithCancelAndBearer(application, accessToken, search string, n
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concat.Bearer(accessToken))
+	req.Header.Add("Authorization", concatination.Bearer(accessToken))
 
 	data, status, err := sendRequest(req)
 	if err != nil {
@@ -81,7 +81,7 @@ func NewPostRequestWithCancel(application, accessToken, search string, number ti
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concat.Bearer(accessToken))
+	req.Header.Add("Authorization", concatination.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -121,7 +121,7 @@ func NewReorderPostRequestWithCancel(application, accessToken, search string, po
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, search,
-		bytes.NewBuffer(concat.DataBuffer(
+		bytes.NewBuffer(concatination.DataBuffer(
 			[]string{"{\"new_index\": ", "\"", strconv.Itoa(position), "\"", "}"},
 		)),
 	)
@@ -129,7 +129,7 @@ func NewReorderPostRequestWithCancel(application, accessToken, search string, po
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concat.Bearer(accessToken))
+	req.Header.Add("Authorization", concatination.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -148,7 +148,7 @@ func NewMarkReadPostRequestWithCancel(application, accessToken, search, ids stri
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, search,
-		bytes.NewBuffer(concat.DataBuffer([]string{
+		bytes.NewBuffer(concatination.DataBuffer([]string{
 			"{\"ids\": ", "\"", ids, "\"", ", ", "\"is_read\": ",
 			"\"", strconv.Itoa(is_read), "\"", "}",
 		})),
@@ -157,7 +157,7 @@ func NewMarkReadPostRequestWithCancel(application, accessToken, search, ids stri
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concat.Bearer(accessToken))
+	req.Header.Add("Authorization", concatination.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -176,7 +176,7 @@ func NewReadDeleteAllPostRequestWithCancel(application, accessToken, search, nam
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, search,
-		bytes.NewBuffer(concat.DataCopy(
+		bytes.NewBuffer(concatination.DataCopy(
 			33+len(name),
 			[]string{"{\"frontend\": ", "\"false\", ", "\"type\": ", "\"", name, "\"", "}"},
 		)),
@@ -185,7 +185,7 @@ func NewReadDeleteAllPostRequestWithCancel(application, accessToken, search, nam
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concat.Bearer(accessToken))
+	req.Header.Add("Authorization", concatination.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -204,7 +204,7 @@ func NewSendMessagePostRequestWithCancel(application, accessToken, search, body 
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, search,
-		bytes.NewBuffer(concat.DataBuffer([]string{
+		bytes.NewBuffer(concatination.DataBuffer([]string{
 			"{\"frontend\": \"false\", \"message\": {\"body\": \"", body,
 			"\", \"from_id\": \"", strconv.Itoa(from_id),
 			"\", \"kind\": \"Private\", \"to_id\": \"", strconv.Itoa(to_id), "\"}}",
@@ -214,7 +214,7 @@ func NewSendMessagePostRequestWithCancel(application, accessToken, search, body 
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concat.Bearer(accessToken))
+	req.Header.Add("Authorization", concatination.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -233,7 +233,7 @@ func NewChangeMessagePutRequestWithCancel(application, accessToken, search, body
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPut, search,
-		bytes.NewBuffer(concat.DataCopy(
+		bytes.NewBuffer(concatination.DataCopy(
 			46+len(body),
 			[]string{"{\"frontend\": \"false\", \"message\": {\"body\": \"", body, "\"}}"},
 		)),
@@ -242,7 +242,7 @@ func NewChangeMessagePutRequestWithCancel(application, accessToken, search, body
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concat.Bearer(accessToken))
+	req.Header.Add("Authorization", concatination.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -264,7 +264,7 @@ func NewDeleteMessageDeleteRequestWithCancel(application, accessToken, search st
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concat.Bearer(accessToken))
+	req.Header.Add("Authorization", concatination.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -286,7 +286,7 @@ func NewDeleteRequestWithCancel(application, accessToken, search string, number 
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concat.Bearer(accessToken))
+	req.Header.Add("Authorization", concatination.Bearer(accessToken))
 
 	data, status, err := sendRequest(req)
 	if err != nil {

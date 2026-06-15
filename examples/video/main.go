@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	g "github.com/heycatch/goshikimori"
+	g "github.com/ghostemeow/goshikimori"
 )
 
 func config() *g.Configuration {

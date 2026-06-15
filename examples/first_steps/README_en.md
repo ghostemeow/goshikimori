@@ -7,7 +7,7 @@
 package main
 
 import (
-  g "github.com/heycatch/goshikimori"
+  g "github.com/ghostemeow/goshikimori"
 )
 
 /*

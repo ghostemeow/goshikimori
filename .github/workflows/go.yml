@@ -9,14 +9,16 @@ jobs:
       - name: Setup golang
         uses: actions/setup-go@v5
         with:
-          go-version: '1.25.0'
-      - name: Neko tests
-        run: go test -v -run TestNekoSearch
-      - name: Cyrillic tests
-        run: go test -v -run TestLanguageCheck
+          go-version: '1.26.0'
       - name: Configuration tests
         run: go test -v configuration_test.go configuration.go
+      - name: GraphQL tests
+        run: go test -v graphql_test.go graphql.go
       - name: Request tests
-        run: go test -v req_test.go req.go
+        run: go test -v ./internal/request
       - name: Concatination tests
-        run: go test -v ./concat
+        run: go test -v ./internal/concatination
+      - name: Neko tests
+        run: go test -v ./neko
+      - name: Genres tests
+        run: go test -v ./genres

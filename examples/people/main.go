@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	g "github.com/heycatch/goshikimori"
-	"github.com/heycatch/goshikimori/consts"
+	g "github.com/ghostemeow/goshikimori"
+	"github.com/ghostemeow/goshikimori/constants"
 )
 
 func config() *g.Configuration {
@@ -17,7 +17,7 @@ func config() *g.Configuration {
 func main() {
 	c := config()
 	// Search peoples.
-	o := &g.Options{Kind: consts.PEOPLE_KIND_SEYU}
+	o := &g.Options{Kind: constants.PEOPLE_KIND_SEYU}
 	sp, status, err := c.SearchPeoples("Aya Hirano", o)
 	if status != 200 || err != nil {
 		fmt.Println(status, err)

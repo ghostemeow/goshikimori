@@ -3,8 +3,8 @@ package bench
 import (
 	"testing"
 
-	g "github.com/heycatch/goshikimori"
-	"github.com/heycatch/goshikimori/consts"
+	g "github.com/ghostemeow/goshikimori"
+	"github.com/ghostemeow/goshikimori/constants"
 )
 
 func makeMinOptions() *g.Options {
@@ -19,9 +19,9 @@ func makeMidOptions() *g.Options {
 		Page: 1,
 		Limit: 10,
 		Score: 7,
-		Order: consts.ANIME_ORDER_AIRED_ON,
-		Kind: consts.ANIME_KIND_TV,
-		Season: consts.SEASON_199x,
+		Order: constants.ANIME_ORDER_AIRED_ON,
+		Kind: constants.ANIME_KIND_TV,
+		Season: constants.SEASON_199x,
 		Censored: true,
 	}
 }
@@ -31,13 +31,13 @@ func makeFullOptions() *g.Options {
 		Page: 1,
 		Limit: 10,
 		Score: 7,
-		Order: consts.ANIME_ORDER_AIRED_ON,
-		Kind: consts.ANIME_KIND_TV,
-		Status: consts.ANIME_STATUS_RELEASED,
-		Season: consts.SEASON_199x,
-		Rating: consts.ANIME_RATING_PG_13,
-		Duration: consts.ANIME_DURATION_F,
-		Mylist: consts.MY_LIST_PLANNED,
+		Order: constants.ANIME_ORDER_AIRED_ON,
+		Kind: constants.ANIME_KIND_TV,
+		Status: constants.ANIME_STATUS_RELEASED,
+		Season: constants.SEASON_199x,
+		Rating: constants.ANIME_RATING_PG_13,
+		Duration: constants.ANIME_DURATION_F,
+		Mylist: constants.MY_LIST_PLANNED,
 		Censored: true,
 		Genre_v2: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 15},
 	}

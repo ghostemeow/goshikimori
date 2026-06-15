@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	g "github.com/heycatch/goshikimori"
-	"github.com/heycatch/goshikimori/consts"
+	g "github.com/ghostemeow/goshikimori"
+	"github.com/ghostemeow/goshikimori/constants"
 )
 
 func config() *g.Configuration {
@@ -23,7 +23,7 @@ func main() {
 		return
 	}
 	m, status, err := fast.UserMessages(&g.Options{
-		Type: consts.MESSAGE_TYPE_NEWS, Page: 1, Limit: 10,
+		Type: constants.MESSAGE_TYPE_NEWS, Page: 1, Limit: 10,
 	})
 	if status != 200 || err != nil {
 		fmt.Println(err)

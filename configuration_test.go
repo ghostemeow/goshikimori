@@ -3,7 +3,7 @@ package goshikimori
 import (
 	"testing"
 
-	"github.com/heycatch/goshikimori/consts"
+	"github.com/ghostemeow/goshikimori/constants"
 )
 
 func TestOptionsTopics(t *testing.T) {
@@ -16,7 +16,7 @@ func TestOptionsTopics(t *testing.T) {
 
 	big := Options{
 		Page: 100002, Limit: 32,
-		Linked_id: 222222222, Linked_type: consts.TOPIC_LINKED_TYPE_ANIME,
+		Linked_id: 222222222, Linked_type: constants.TOPIC_LINKED_TYPE_ANIME,
 	}
 	if big.OptionsTopics() == "linked_id=222222222&linked_type=Anime" {
 		t.Log("Big OptionsTopics passed")
@@ -26,7 +26,7 @@ func TestOptionsTopics(t *testing.T) {
 
 	zero := Options{
 		Page: 0, Limit: 0,
-		Linked_id: 0, Linked_type: consts.TOPIC_LINKED_TYPE_ANIME,
+		Linked_id: 0, Linked_type: constants.TOPIC_LINKED_TYPE_ANIME,
 	}
 	if zero.OptionsTopics() == "" {
 		t.Log("Zero OptionsTopics passed")
@@ -36,7 +36,7 @@ func TestOptionsTopics(t *testing.T) {
 
 	negative := Options{
 		Page: -1, Limit: -1,
-		Linked_id: -1, Linked_type: consts.TOPIC_LINKED_TYPE_ANIME,
+		Linked_id: -1, Linked_type: constants.TOPIC_LINKED_TYPE_ANIME,
 	}
 	if negative.OptionsTopics() == "" {
 		t.Log("Negative OptionsTopics passed")
@@ -45,8 +45,8 @@ func TestOptionsTopics(t *testing.T) {
 	}
 
 	normal_one := Options{
-		Page: 5, Limit: 10, Forum: consts.TOPIC_FORUM_ANIMANGA,
-		Linked_id: 342908, Linked_type: consts.TOPIC_LINKED_TYPE_ANIME,
+		Page: 5, Limit: 10, Forum: constants.TOPIC_FORUM_ANIMANGA,
+		Linked_id: 342908, Linked_type: constants.TOPIC_LINKED_TYPE_ANIME,
 	}
 	if normal_one.OptionsTopics() == "forum=animanga&limit=10&linked_id=342908&linked_type=Anime&page=5" {
 		t.Log("Normal-one OptionsTopics passed")
@@ -55,8 +55,8 @@ func TestOptionsTopics(t *testing.T) {
 	}
 
 	normal_two := Options{
-		Page: 3, Limit: 8, Forum: consts.TOPIC_FORUM_CLUBS,
-		Linked_id: 2323, Linked_type: consts.TOPIC_LINKED_TYPE_MANGA,
+		Page: 3, Limit: 8, Forum: constants.TOPIC_FORUM_CLUBS,
+		Linked_id: 2323, Linked_type: constants.TOPIC_LINKED_TYPE_MANGA,
 	}
 	if normal_two.OptionsTopics() == "forum=clubs&limit=8&linked_id=2323&linked_type=Manga&page=3" {
 		t.Log("Normal-two OptionsTopics passed")
@@ -67,8 +67,8 @@ func TestOptionsTopics(t *testing.T) {
 
 func TestOptionsTopicsV2(t *testing.T) {
 	normal_one := Options{
-		Page: 5, Limit: 10, Forum: consts.TOPIC_FORUM_ANIMANGA,
-		Linked_id: 342908, Linked_type: consts.TOPIC_LINKED_TYPE_ANIME,
+		Page: 5, Limit: 10, Forum: constants.TOPIC_FORUM_ANIMANGA,
+		Linked_id: 342908, Linked_type: constants.TOPIC_LINKED_TYPE_ANIME,
 	}
 	if normal_one.OptionsTopicsV2() == "page=5&limit=10&forum=animanga&linked_id=342908&linked_type=Anime" {
 		t.Log("Normal-one OptionsTopicsV2 passed")
@@ -77,8 +77,8 @@ func TestOptionsTopicsV2(t *testing.T) {
 	}
 
 	normal_two := Options{
-		Page: 3, Limit: 8, Forum: consts.TOPIC_FORUM_CLUBS,
-		Linked_id: 2323, Linked_type: consts.TOPIC_LINKED_TYPE_MANGA,
+		Page: 3, Limit: 8, Forum: constants.TOPIC_FORUM_CLUBS,
+		Linked_id: 2323, Linked_type: constants.TOPIC_LINKED_TYPE_MANGA,
 	}
 	if normal_two.OptionsTopicsV2() == "page=3&limit=8&forum=clubs&linked_id=2323&linked_type=Manga" {
 		t.Log("Normal-two OptionsTopicsV2 passed")
@@ -95,28 +95,28 @@ func TestOptionsMessages(t *testing.T) {
 		t.Error("Empty OptionsMessages failed")
 	}
 
-	big := Options{Type: consts.MESSAGE_TYPE_NEWS, Page: 100002, Limit: 102}
+	big := Options{Type: constants.MESSAGE_TYPE_NEWS, Page: 100002, Limit: 102}
 	if big.OptionsMessages() == "type=news" {
 		t.Log("Big OptionsMessages passed")
 	} else {
 		t.Error("Big OptionsMessages failed")
 	}
 
-	zero := Options{Type: consts.MESSAGE_TYPE_NEWS, Page: 0, Limit: 0}
+	zero := Options{Type: constants.MESSAGE_TYPE_NEWS, Page: 0, Limit: 0}
 	if zero.OptionsMessages() == "type=news" {
 		t.Log("Zero OptionsMessages passed")
 	} else {
 		t.Error("Zero OptionsMessages failed")
 	}
 
-	negative := Options{Type: consts.MESSAGE_TYPE_NEWS, Page: -1, Limit: -1}
+	negative := Options{Type: constants.MESSAGE_TYPE_NEWS, Page: -1, Limit: -1}
 	if negative.OptionsMessages() == "type=news" {
 		t.Log("Negative OptionsMessages passed")
 	} else {
 		t.Error("Negative OptionsMessages failed")
 	}
 
-	normal := Options{Type: consts.MESSAGE_TYPE_PRIVATE, Page: 2, Limit: 10}
+	normal := Options{Type: constants.MESSAGE_TYPE_PRIVATE, Page: 2, Limit: 10}
 	if normal.OptionsMessages() == "limit=10&page=2&type=private" {
 		t.Log("Normal OptionsMessages passed")
 	} else {
@@ -125,7 +125,7 @@ func TestOptionsMessages(t *testing.T) {
 }
 
 func TestOptionsMessagesV2(t *testing.T) {
-	normal := Options{Type: consts.MESSAGE_TYPE_PRIVATE, Page: 2, Limit: 10}
+	normal := Options{Type: constants.MESSAGE_TYPE_PRIVATE, Page: 2, Limit: 10}
 	if normal.OptionsMessagesV2() == "page=2&limit=10&type=private" {
 		t.Log("Normal OptionsMessagesV2 passed")
 	} else {
@@ -162,7 +162,7 @@ func TestOptionsUserHistory(t *testing.T) {
 		t.Error("Negative OptionsUserHistory failed")
 	}
 
-	normal := Options{Page: 3, Limit: 20, Target_id: 1337, Target_type: consts.TARGET_TYPE_MANGA}
+	normal := Options{Page: 3, Limit: 20, Target_id: 1337, Target_type: constants.TARGET_TYPE_MANGA}
 	if normal.OptionsUserHistory() == "limit=20&page=3&target_id=1337&target_type=Manga" {
 		t.Log("Zero OptionsUserHistory passed")
 	} else {
@@ -171,7 +171,7 @@ func TestOptionsUserHistory(t *testing.T) {
 }
 
 func TestOptionsUserHistoryV2(t *testing.T) {
-	normal := Options{Page: 3, Limit: 20, Target_id: 1337, Target_type: consts.TARGET_TYPE_MANGA}
+	normal := Options{Page: 3, Limit: 20, Target_id: 1337, Target_type: constants.TARGET_TYPE_MANGA}
 	if normal.OptionsUserHistoryV2() == "page=3&limit=20&target_type=Manga&target_id=1337" {
 		t.Log("Zero OptionsUserHistoryV2 passed")
 	} else {
@@ -263,10 +263,10 @@ func TestOptionsAnime(t *testing.T) {
 	}
 
 	normal := Options{
-		Page: 2, Limit: 12, Order: consts.ANIME_ORDER_ID, Kind: consts.ANIME_KIND_TV,
-		Status: consts.ANIME_STATUS_RELEASED, Season: consts.SEASON_199x,
-		Score: 8, Rating: consts.ANIME_RATING_R, Duration: consts.ANIME_DURATION_D,
-		Censored: true, Mylist: consts.MY_LIST_WATCHING, Genre_v2: []int{539, 539},
+		Page: 2, Limit: 12, Order: constants.ANIME_ORDER_ID, Kind: constants.ANIME_KIND_TV,
+		Status: constants.ANIME_STATUS_RELEASED, Season: constants.SEASON_199x,
+		Score: 8, Rating: constants.ANIME_RATING_R, Duration: constants.ANIME_DURATION_D,
+		Censored: true, Mylist: constants.MY_LIST_WATCHING, Genre_v2: []int{539, 539},
 	}
 	if normal.OptionsAnime() == "censored=true&duration=D&genre_v2=539-Erotica&kind=tv&limit=12&mylist=watching&order=id&page=2&rating=r&score=8&season=199x&status=released" {
 		t.Log("Normal OptionsAnime passed")
@@ -277,10 +277,10 @@ func TestOptionsAnime(t *testing.T) {
 
 func TestOptionsAnimeV2(t *testing.T) {
 	normal := Options{
-		Page: 2, Limit: 12, Order: consts.ANIME_ORDER_ID, Kind: consts.ANIME_KIND_TV,
-		Status: consts.ANIME_STATUS_RELEASED, Season: consts.SEASON_199x,
-		Score: 8, Rating: consts.ANIME_RATING_R, Duration: consts.ANIME_DURATION_D,
-		Censored: true, Mylist: consts.MY_LIST_WATCHING, Genre_v2: []int{539, 539},
+		Page: 2, Limit: 12, Order: constants.ANIME_ORDER_ID, Kind: constants.ANIME_KIND_TV,
+		Status: constants.ANIME_STATUS_RELEASED, Season: constants.SEASON_199x,
+		Score: 8, Rating: constants.ANIME_RATING_R, Duration: constants.ANIME_DURATION_D,
+		Censored: true, Mylist: constants.MY_LIST_WATCHING, Genre_v2: []int{539, 539},
 	}
 	if normal.OptionsAnimeV2() == "page=2&limit=12&score=8&order=id&kind=tv&status=released&season=199x&rating=r&duration=D&mylist=watching&censored=true&genre_v2=539-Erotica" {
 		t.Log("Normal OptionsAnimeV2 passed")
@@ -326,9 +326,9 @@ func TestOptionsManga(t *testing.T) {
 	}
 
 	normal := Options{
-		Page: 4, Limit: 5, Order: consts.MANGA_ORDER_ID, Kind: consts.MANGA_KIND_MANGA,
-		Status: consts.MANGA_STATUS_ANONS, Season: consts.SEASON_198x,
-		Score: 7, Censored: true, Mylist: consts.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
+		Page: 4, Limit: 5, Order: constants.MANGA_ORDER_ID, Kind: constants.MANGA_KIND_MANGA,
+		Status: constants.MANGA_STATUS_ANONS, Season: constants.SEASON_198x,
+		Score: 7, Censored: true, Mylist: constants.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
 	}
 	if normal.OptionsManga() == "censored=true&genre_v2=540-Erotica&kind=manga&limit=5&mylist=planned&order=id&page=4&score=7&season=198x&status=anons" {
 		t.Log("Normal OptionsManga passed")
@@ -339,9 +339,9 @@ func TestOptionsManga(t *testing.T) {
 
 func TestOptionsMangaV2(t *testing.T) {
 	normal := Options{
-		Page: 4, Limit: 5, Order: consts.MANGA_ORDER_ID, Kind: consts.MANGA_KIND_MANGA,
-		Status: consts.MANGA_STATUS_ANONS, Season: consts.SEASON_198x,
-		Score: 7, Censored: true, Mylist: consts.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
+		Page: 4, Limit: 5, Order: constants.MANGA_ORDER_ID, Kind: constants.MANGA_KIND_MANGA,
+		Status: constants.MANGA_STATUS_ANONS, Season: constants.SEASON_198x,
+		Score: 7, Censored: true, Mylist: constants.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
 	}
 	if normal.OptionsMangaV2() == "page=4&limit=5&score=7&order=id&kind=manga&status=anons&season=198x&mylist=planned&censored=true" {
 		t.Log("Normal OptionsMangaV2 passed")
@@ -387,8 +387,8 @@ func TestOptionsRanobe(t *testing.T) {
 	}
 
 	normal := Options{
-		Page: 4, Limit: 5, Order: consts.MANGA_ORDER_ID, Status: consts.MANGA_STATUS_ANONS,
-		Season: consts.SEASON_198x, Score: 7, Censored: true, Mylist: consts.MY_LIST_PLANNED,
+		Page: 4, Limit: 5, Order: constants.MANGA_ORDER_ID, Status: constants.MANGA_STATUS_ANONS,
+		Season: constants.SEASON_198x, Score: 7, Censored: true, Mylist: constants.MY_LIST_PLANNED,
 		Genre_v2: []int{540, 540},
 	}
 	if normal.OptionsRanobe() == "censored=true&genre_v2=540-Erotica&limit=5&mylist=planned&order=id&page=4&score=7&season=198x&status=anons" {
@@ -400,8 +400,8 @@ func TestOptionsRanobe(t *testing.T) {
 
 func TestOptionsRanobeV2(t *testing.T) {
 	normal := Options{
-		Page: 4, Limit: 5, Order: consts.MANGA_ORDER_ID, Status: consts.MANGA_STATUS_ANONS,
-		Season: consts.SEASON_198x, Score: 7, Censored: true, Mylist: consts.MY_LIST_PLANNED,
+		Page: 4, Limit: 5, Order: constants.MANGA_ORDER_ID, Status: constants.MANGA_STATUS_ANONS,
+		Season: constants.SEASON_198x, Score: 7, Censored: true, Mylist: constants.MY_LIST_PLANNED,
 		Genre_v2: []int{540, 540},
 	}
 	if normal.OptionsRanobeV2() == "page=4&limit=5&score=7&order=id&kind=&status=anons&season=198x&mylist=planned&censored=true" {
@@ -465,7 +465,7 @@ func TestOptionsAnimeRates(t *testing.T) {
 		t.Error("Negative OptionsAnimeRates failed")
 	}
 
-	normal := Options{Page: 15, Limit: 405, Status: consts.MY_LIST_DROPPED, Censored: true}
+	normal := Options{Page: 15, Limit: 405, Status: constants.MY_LIST_DROPPED, Censored: true}
 	if normal.OptionsAnimeRates() == "censored=true&limit=405&page=15&status=dropped" {
 		t.Log("Normal OptionsAnimeRates passed")
 	} else {
@@ -474,7 +474,7 @@ func TestOptionsAnimeRates(t *testing.T) {
 }
 
 func TestOptionsAnimeRatesV2(t *testing.T) {
-	normal := Options{Page: 15, Limit: 405, Status: consts.MY_LIST_DROPPED, Censored: true}
+	normal := Options{Page: 15, Limit: 405, Status: constants.MY_LIST_DROPPED, Censored: true}
 	if normal.OptionsAnimeRatesV2() == "page=15&limit=405&status=dropped&censored=true" {
 		t.Log("Normal OptionsAnimeRatesV2 passed")
 	} else {
@@ -536,7 +536,7 @@ func TestOptionsPeople(t *testing.T) {
 		t.Error("Empty OptionsPeople failed")
 	}
 
-	normal := Options{Kind: consts.PEOPLE_KIND_MANGAKA}
+	normal := Options{Kind: constants.PEOPLE_KIND_MANGAKA}
 	if normal.OptionsPeople() == "kind=mangaka" {
 		t.Log("Normal OptionsPeople passed")
 	} else {
@@ -545,7 +545,7 @@ func TestOptionsPeople(t *testing.T) {
 }
 
 func TestOptionsPeopleV2(t *testing.T) {
-	normal := Options{Kind: consts.PEOPLE_KIND_MANGAKA}
+	normal := Options{Kind: constants.PEOPLE_KIND_MANGAKA}
 	if normal.OptionsPeopleV2() == "kind=mangaka" {
 		t.Log("Normal OptionsPeopleV2 passed")
 	} else {
@@ -590,9 +590,9 @@ func TestOptionsRandomAnime(t *testing.T) {
 	}
 
 	normal := Options{
-		Limit: 12, Kind: consts.ANIME_KIND_TV, Status: consts.ANIME_STATUS_RELEASED,
-		Mylist: consts.MY_LIST_ON_HOLD, Season: consts.SEASON_199x,
-		Score: 8, Rating: consts.ANIME_RATING_R, Duration: consts.ANIME_DURATION_D,
+		Limit: 12, Kind: constants.ANIME_KIND_TV, Status: constants.ANIME_STATUS_RELEASED,
+		Mylist: constants.MY_LIST_ON_HOLD, Season: constants.SEASON_199x,
+		Score: 8, Rating: constants.ANIME_RATING_R, Duration: constants.ANIME_DURATION_D,
 		Censored: true, Genre_v2: []int{539, 539},
 	}
 	if normal.OptionsRandomAnime() == "censored=true&duration=D&genre_v2=539-Erotica&kind=tv&limit=12&mylist=on_hold&rating=r&score=8&season=199x&status=released" {
@@ -604,9 +604,9 @@ func TestOptionsRandomAnime(t *testing.T) {
 
 func TestOptionsRandomAnimeV2(t *testing.T) {
 	normal := Options{
-		Limit: 12, Kind: consts.ANIME_KIND_TV, Status: consts.ANIME_STATUS_RELEASED,
-		Mylist: consts.MY_LIST_ON_HOLD, Season: consts.SEASON_199x,
-		Score: 8, Rating: consts.ANIME_RATING_R, Duration: consts.ANIME_DURATION_D,
+		Limit: 12, Kind: constants.ANIME_KIND_TV, Status: constants.ANIME_STATUS_RELEASED,
+		Mylist: constants.MY_LIST_ON_HOLD, Season: constants.SEASON_199x,
+		Score: 8, Rating: constants.ANIME_RATING_R, Duration: constants.ANIME_DURATION_D,
 		Censored: true, Genre_v2: []int{539, 539},
 	}
 	if normal.OptionsAnimeV2() == "page=0&limit=12&score=8&order=&kind=tv&status=released&season=199x&rating=r&duration=D&mylist=on_hold&censored=true&genre_v2=539-Erotica" {
@@ -653,9 +653,9 @@ func TestOptionsRandomManga(t *testing.T) {
 	}
 
 	normal := Options{
-		Limit: 5, Kind: consts.MANGA_KIND_MANGA, Status: consts.MANGA_STATUS_ANONS,
-		Season: consts.SEASON_198x, Score: 7, Censored: true,
-		Mylist: consts.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
+		Limit: 5, Kind: constants.MANGA_KIND_MANGA, Status: constants.MANGA_STATUS_ANONS,
+		Season: constants.SEASON_198x, Score: 7, Censored: true,
+		Mylist: constants.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
 	}
 	if normal.OptionsRandomManga() == "censored=true&genre_v2=540-Erotica&kind=manga&limit=5&mylist=planned&score=7&season=198x&status=anons" {
 		t.Log("Normal OptionsRandomManga passed")
@@ -666,9 +666,9 @@ func TestOptionsRandomManga(t *testing.T) {
 
 func TestOptionsRandomMangaV2(t *testing.T) {
 	normal := Options{
-		Limit: 5, Kind: consts.MANGA_KIND_MANGA, Status: consts.MANGA_STATUS_ANONS,
-		Season: consts.SEASON_198x, Score: 7, Censored: true,
-		Mylist: consts.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
+		Limit: 5, Kind: constants.MANGA_KIND_MANGA, Status: constants.MANGA_STATUS_ANONS,
+		Season: constants.SEASON_198x, Score: 7, Censored: true,
+		Mylist: constants.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
 	}
 	if normal.OptionsMangaV2() == "page=0&limit=5&score=7&order=&kind=manga&status=anons&season=198x&mylist=planned&censored=true" {
 		t.Log("Normal OptionsRandomMangaV2 passed")
@@ -714,9 +714,9 @@ func TestOptionsRandomRanobe(t *testing.T) {
 	}
 
 	normal := Options{
-		Limit: 5, Status: consts.MANGA_STATUS_ANONS,
-		Season: consts.SEASON_198x, Score: 7, Censored: true,
-		Mylist: consts.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
+		Limit: 5, Status: constants.MANGA_STATUS_ANONS,
+		Season: constants.SEASON_198x, Score: 7, Censored: true,
+		Mylist: constants.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
 	}
 	if normal.OptionsRandomRanobe() == "censored=true&genre_v2=540-Erotica&limit=5&mylist=planned&score=7&season=198x&status=anons" {
 		t.Log("Normal OptionsRandomRanobe passed")
@@ -727,9 +727,9 @@ func TestOptionsRandomRanobe(t *testing.T) {
 
 func TestOptionsRandomRanobeV2(t *testing.T) {
 	normal := Options{
-		Limit: 5, Status: consts.MANGA_STATUS_ANONS,
-		Season: consts.SEASON_198x, Score: 7, Censored: true,
-		Mylist: consts.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
+		Limit: 5, Status: constants.MANGA_STATUS_ANONS,
+		Season: constants.SEASON_198x, Score: 7, Censored: true,
+		Mylist: constants.MY_LIST_PLANNED, Genre_v2: []int{540, 540},
 	}
 	if normal.OptionsRanobeV2() == "page=0&limit=5&score=7&order=&kind=&status=anons&season=198x&mylist=planned&censored=true" {
 		t.Log("Normal OptionsRandomRanobeV2 passed")

@@ -1,5 +1,5 @@
 // Status bar serves to slow down requests in tests.
-package goshikimori
+package utils
 
 import (
 	"fmt"
@@ -17,13 +17,13 @@ type StatusBar struct {
 	Wait    time.Duration
 }
 
-func (s *StatusBar) settings(length int, symbol string, wait time.Duration) {
+func (s *StatusBar) Settings(length int, symbol string, wait time.Duration) {
 	s.Total = length
 	s.Graph = symbol
 	s.Wait  = wait
 }
 
-func (s *StatusBar) run() {
+func (s *StatusBar) Run() {
 	fmt.Printf("Too many requests at once, waiting %d seconds...\n", s.Total)
 
 	for i := 0; i <= s.Total; i++ {

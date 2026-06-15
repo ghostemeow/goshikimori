@@ -1,4 +1,4 @@
-## EN | [RU](https://github.com/heycatch/goshikimori/blob/master/graphql/README.md)
+## EN | [RU](https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md)
 
 ## At the moment, the GraphQL API is stated as experimental.
 
@@ -9,8 +9,7 @@ package main
 import (
   "fmt"
 
-  shiki "github.com/heycatch/goshikimori"
-  graph "github.com/heycatch/goshikimori/graphql"
+  shiki "github.com/ghostemeow/goshikimori"
 )
 
 func conf() *shiki.Configuration {
@@ -39,10 +38,10 @@ func main() {
   //    11) censored: false;
   //    12) genre: nil; skipped
   //
-  // The available values can be found in the function description: graph.Values();
-  // The available interface parameters can be found in the function description: graph.AnimeSchema();
-  schema, err := graph.AnimeSchema(
-    graph.Values("id", "name", "score", "episodes", "airedOn{year month day date}"),
+  // The available values can be found in the function description: shiki.ValuesSchema();
+  // The available interface parameters can be found in the function description: shiki.AnimeSchema();
+  schema, err := shiki.AnimeSchema(
+    shiki.ValuesSchema("id", "name", "score", "episodes", "airedOn{year month day date}"),
     "initial d", 1, 5, 8, "", shiki.ANIME_KIND_TV,
     shiki.ANIME_STATUS_RELEASED, "", "", shiki.ANIME_RATING_PG_13, "", false, nil,
   )
@@ -74,8 +73,7 @@ package main
 import (
   "fmt"
 
-  shiki "github.com/heycatch/goshikimori"
-  graph "github.com/heycatch/goshikimori/graphql"
+  shiki "github.com/ghostemeow/goshikimori"
 )
 
 func conf() *shiki.Configuration {
@@ -102,10 +100,10 @@ func main() {
   //    9) censored: false;
   //    10) genre: nil; skipped;
   //
-  // The available values can be found in the function description: graph.Values();
-  // The available interface parameters can be found in the function description: graph.MangaSchema();
-  schema, err := graph.MangaSchema(
-    graph.Values("id", "name", "score", "volumes", "chapters", "releasedOn{year}"),
+  // The available values can be found in the function description: shiki.ValuesSchema();
+  // The available interface parameters can be found in the function description: shiki.MangaSchema();
+  schema, err := shiki.MangaSchema(
+    shiki.ValuesSchema("id", "name", "score", "volumes", "chapters", "releasedOn{year}"),
     "liar game", 1, 1, 8, "", shiki.MANGA_KIND_MANGA, shiki.MANGA_STATUS_RELEASED,
     "", shiki.MY_LIST_COMPLETED, false, nil,
   )
@@ -134,8 +132,7 @@ package main
 import (
   "fmt"
 
-  shiki "github.com/heycatch/goshikimori"
-  graph "github.com/heycatch/goshikimori/graphql"
+  shiki "github.com/ghostemeow/goshikimori"
 )
 
 func conf() *shiki.Configuration {
@@ -154,10 +151,10 @@ func main() {
   //    1) page: 1;
   //    2) limit: 2;
   //
-  // The available values can be found in the function description: graph.Values();
-  // The available interface parameters can be found in the function description: graph.CharacterSchema();
-  schema, err := graph.CharacterSchema(
-    graph.Values("id", "name", "russian", "url", "description"),
+  // The available values can be found in the function description: shiki.ValuesSchema();
+  // The available interface parameters can be found in the function description: shiki.CharacterSchema();
+  schema, err := shiki.CharacterSchema(
+    shiki.ValuesSchema("id", "name", "russian", "url", "description"),
     "onizuka", 1, 2,
   )
   if err != nil {
@@ -185,8 +182,7 @@ package main
 import (
   "fmt"
 
-  shiki "github.com/heycatch/goshikimori"
-  graph "github.com/heycatch/goshikimori/graphql"
+  shiki "github.com/ghostemeow/goshikimori"
 )
 
 func conf() *shiki.Configuration {
@@ -209,10 +205,10 @@ func main() {
   //    4) isMangaka: false;
   //    5) isProducer: false;
   //
-  // The available values can be found in the function description: graph.Values();
-  // The available interface parameters can be found in the function description: graph.PeopleSchema();
-  schema, err := graph.PeopleSchema(
-    graph.Values("id", "name", "russian", "url", "website", "birthOn{year month day date}"),
+  // The available values can be found in the function description: shiki.ValuesSchema();
+  // The available interface parameters can be found in the function description: shiki.PeopleSchema();
+  schema, err := shiki.PeopleSchema(
+    shiki.ValuesSchema("id", "name", "russian", "url", "website", "birthOn{year month day date}"),
     "satsuki", 1, 1, true, false, false,
   )
   if err != nil {
@@ -243,8 +239,7 @@ package main
 import (
   "fmt"
 
-  shiki "github.com/heycatch/goshikimori"
-  graph "github.com/heycatch/goshikimori/graphql"
+  shiki "github.com/ghostemeow/goshikimori"
 )
 
 func config() *shiki.Configuration {
@@ -268,10 +263,10 @@ func main() {
   //    3) status: completed;
   //    4) targetType: Anime;
   //
-  // The available values can be found in the function description: graph.Values();
-  // The available interface parameters can be found in the function description: graph.UserRatesSchema();
-  schema, err := graph.UserRatesSchema(
-    graph.Values("id", "text", "score", "createdAt", "anime{id name}"),
+  // The available values can be found in the function description: shiki.ValuesSchema();
+  // The available interface parameters can be found in the function description: shiki.UserRatesSchema();
+  schema, err := shiki.UserRatesSchema(
+    shiki.ValuesSchema("id", "text", "score", "createdAt", "anime{id name}"),
     181833, graph.UserRatesOrder(shiki.GRAPHQL_ORDER_FIELD_ID, shiki.GRAPHQL_ORDER_ORDER_DESC),
     1, 10, shiki.MY_LIST_COMPLETED, shiki.TARGET_TYPE_ANIME,
   )

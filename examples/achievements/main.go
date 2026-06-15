@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 
-	g "github.com/heycatch/goshikimori"
+	g "github.com/ghostemeow/goshikimori"
+	"github.com/ghostemeow/goshikimori/neko"
 )
 
 func config() *g.Configuration {
@@ -29,7 +30,7 @@ func main() {
 		fmt.Println("achievements not found")
 		return
 	}
-	neko, err := g.NekoSearch("Hellsing")
+	neko, err := neko.Search("Hellsing")
 	if err != nil {
 		fmt.Println(err)
 		return

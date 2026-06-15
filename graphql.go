@@ -1,4 +1,4 @@
-package graphql
+package goshikimori
 
 import (
 	"bytes"
@@ -6,7 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/heycatch/goshikimori/concat"
+	"github.com/ghostemeow/goshikimori/internal/concatination"
+	"github.com/ghostemeow/goshikimori/genres"
 )
 
 // Available anime options:
@@ -53,7 +54,7 @@ import (
 //   - id text createdAt updatedAt rewatches score status episodes chapters volumes
 //   - anime{...} // All parameters from the "Available anime options:"
 //   - manga{...} // All parameters from the "Available manga options:"
-func Values(input ...string) string {
+func ValuesSchema(input ...string) string {
 	var res bytes.Buffer
 
 	// We always return 1, even if the slice is empty.
@@ -63,7 +64,7 @@ func Values(input ...string) string {
 		return "id"
 	}
 
-	// TODO (heycatch): add keyword checks and the keyword is "full" to add everything.
+	// TODO (ghostemeow): add keyword checks and the keyword is "full" to add everything.
 	for i := 0; i < len(input); i++ {
 		res.WriteString(input[i])
 		res.WriteString(" ")
@@ -150,7 +151,7 @@ func Values(input ...string) string {
 //
 // How to use and all the information you need [here].
 //
-// [here]: https://github.com/heycatch/goshikimori/blob/master/graphql/README.md
+// [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
 func AnimeSchema(values string, name string, options ...any) (string, error) {
 	var parameterOptions bytes.Buffer
 
@@ -230,7 +231,7 @@ func AnimeSchema(values string, name string, options ...any) (string, error) {
 			}
 		case 11:
 			genres_v2, ok_genre_v2 := option.([]int)
-			genre := concat.MapGenresAnime(genres_v2)
+			genre := genres.MapGenresAnime(genres_v2)
 			if ok_genre_v2 && genre != "" {
 				parameterOptions.WriteString(", genre: \"")
 				parameterOptions.WriteString(genre)
@@ -242,7 +243,7 @@ func AnimeSchema(values string, name string, options ...any) (string, error) {
 	}
 
 	// 36(graphql?query={animes(search: " "){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concat.Url(36+len(name)+len(parameterOptions.String())+len(values), []string{
+	return concatination.Url(36+len(name)+len(parameterOptions.String())+len(values), []string{
 		"graphql?query={animes(search: \"", name, "\"",
 		parameterOptions.String(), ")",
 		"{", values, "}}",
@@ -312,7 +313,7 @@ func AnimeSchema(values string, name string, options ...any) (string, error) {
 //
 // How to use and all the information you need [here].
 //
-// [here]: https://github.com/heycatch/goshikimori/blob/master/graphql/README.md
+// [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
 func MangaSchema(values string, name string, options ...any) (string, error) {
 	var parameterOptions bytes.Buffer
 
@@ -378,7 +379,7 @@ func MangaSchema(values string, name string, options ...any) (string, error) {
 			}
 		case 9:
 			genres_v2, ok_genre_v2 := option.([]int)
-			genre := concat.MapGenresManga(genres_v2)
+			genre := genres.MapGenresManga(genres_v2)
 			if ok_genre_v2 && genre != "" {
 				parameterOptions.WriteString(", genre: \"")
 				parameterOptions.WriteString(genre)
@@ -390,7 +391,7 @@ func MangaSchema(values string, name string, options ...any) (string, error) {
 	}
 
 	// 36(graphql?query={mangas(search: " "){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concat.Url(36+len(name)+len(parameterOptions.String())+len(values), []string{
+	return concatination.Url(36+len(name)+len(parameterOptions.String())+len(values), []string{
 		"graphql?query={mangas(search: \"", name, "\"",
 		parameterOptions.String(), ")",
 		"{", values, "}}",
@@ -407,7 +408,7 @@ func MangaSchema(values string, name string, options ...any) (string, error) {
 //
 // How to use and all the information you need [here].
 //
-// [here]: https://github.com/heycatch/goshikimori/blob/master/graphql/README.md
+// [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
 func CharacterSchema(values string, name string, options ...any) (string, error) {
 	var parameterOptions bytes.Buffer
 
@@ -431,7 +432,7 @@ func CharacterSchema(values string, name string, options ...any) (string, error)
 	}
 
 	// 40(graphql?query={characters(search: " "){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concat.Url(40+len(name)+len(parameterOptions.String())+len(values), []string{
+	return concatination.Url(40+len(name)+len(parameterOptions.String())+len(values), []string{
 		"graphql?query={characters(search: \"", name, "\"",
 		parameterOptions.String(), ")",
 		"{", values, "}}",
@@ -451,7 +452,7 @@ func CharacterSchema(values string, name string, options ...any) (string, error)
 //
 // How to use and all the information you need [here].
 //
-// [here]: https://github.com/heycatch/goshikimori/blob/master/graphql/README.md
+// [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
 func PeopleSchema(values string, name string, options ...any) (string, error) {
 	var parameterOptions bytes.Buffer
 
@@ -493,7 +494,7 @@ func PeopleSchema(values string, name string, options ...any) (string, error) {
 	}
 
 	// 36(graphql?query={people(search: " "){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concat.Url(36+len(name)+len(parameterOptions.String())+len(values), []string{
+	return concatination.Url(36+len(name)+len(parameterOptions.String())+len(values), []string{
 		"graphql?query={people(search: \"", name, "\"",
 		parameterOptions.String(), ")",
 		"{", values, "}}",
@@ -512,7 +513,7 @@ func PeopleSchema(values string, name string, options ...any) (string, error) {
 //
 // How to use and all the information you need [here].
 //
-// [here]: https://github.com/heycatch/goshikimori/blob/master/graphql/README.md
+// [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
 func UserRatesOrder(field, order string) string {
 	var res bytes.Buffer
 
@@ -558,7 +559,7 @@ func UserRatesOrder(field, order string) string {
 //
 // How to use and all the information you need [here].
 //
-// [here]: https://github.com/heycatch/goshikimori/blob/master/graphql/README.md
+// [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
 func UserRatesSchema(values string, userId int, order string, options ...any) (string, error) {
 	var parameterOptions bytes.Buffer
 
@@ -600,11 +601,11 @@ func UserRatesSchema(values string, userId int, order string, options ...any) (s
 	}
 
 	// 37(graphql?query={userRates(userId: ){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concat.Url(37+len(id)+len(parameterOptions.String())+len(values), []string{
+	return concatination.Url(37+len(id)+len(parameterOptions.String())+len(values), []string{
 		"graphql?query={userRates(userId: ", id,
 		parameterOptions.String(), ")",
 		"{", values, "}}",
 	}), nil
 }
 
-// TODO (heycatch): create query with variables.
+// TODO (ghostemeow): create query with variables.
