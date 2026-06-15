@@ -1,4 +1,4 @@
-// Copyright (C) 2025 ghostemeow <andreyisback@yandex.ru>.
+// Copyright (C) 2026 ghostemeow <andreyisback@yandex.ru>.
 //
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file.
@@ -3218,7 +3218,7 @@ func (c *Configuration) RemoveIgnoreTopic(id int) (models.IgnoreTopic, int, erro
 //
 // How to use and all the information you need [here].
 //
-// [here]: https://github.com/ghostemeow/goshikimori/blob/master/graphql/README.md
+// [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
 func (c *Configuration) SearchGraphql(schema string) (models.GraphQL, int, error) {
 	var g models.GraphQL
 
