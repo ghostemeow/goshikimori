@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ghostemeow/goshikimori/internal/concatination"
+	"github.com/ghostemeow/goshikimori/internal/concatenation"
 )
 
 type Genres struct {
@@ -119,30 +119,22 @@ var (
 	}
 )
 
-// Write key to slice and check for duplicates.
-func checkForDuplicates(target int, slice []int) bool {
-	for i := 0; i < 50; i++ {
-		if slice[i] == target {
-			return false
-		}
-	}
-	return true
-}
-
 // Anime value map search.
 func MapGenresAnime(slice []int) string {
 	var res bytes.Buffer
-	var count int
-	tempSlice := make([]int, 50)
+	seen := make(map[int]struct{}, len(slice))
 
-	for i := 0; i < len(slice); i++ {
-		_, ok := GenreAnime[slice[i]]
-		if ok && checkForDuplicates(slice[i], tempSlice) {
-			res.WriteString(GenreAnime[slice[i]])
-			res.WriteString(",")
-			tempSlice[count] = slice[i]
-			count++
+	for _, g := range slice {
+		name, ok := GenreAnime[g]
+		if !ok {
+			continue
 		}
+		if _, dup := seen[g]; dup {
+			continue
+		}
+		seen[g] = struct{}{}
+		res.WriteString(name)
+		res.WriteString(",")
 	}
 
 	return strings.TrimSuffix(res.String(), ",")
@@ -151,17 +143,19 @@ func MapGenresAnime(slice []int) string {
 // Manga value map search.
 func MapGenresManga(slice []int) string {
 	var res bytes.Buffer
-	var count int
-	tempSlice := make([]int, 50)
+	seen := make(map[int]struct{}, len(slice))
 
-	for i := 0; i < len(slice); i++ {
-		_, ok := GenreManga[slice[i]]
-		if ok && checkForDuplicates(slice[i], tempSlice) {
-			res.WriteString(GenreManga[slice[i]])
-			res.WriteString(",")
-			tempSlice[count] = slice[i]
-			count++
+	for _, g := range slice {
+		name, ok := GenreManga[g]
+		if !ok {
+			continue
 		}
+		if _, dup := seen[g]; dup {
+			continue
+		}
+		seen[g] = struct{}{}
+		res.WriteString(name)
+		res.WriteString(",")
 	}
 
 	return strings.TrimSuffix(res.String(), ",")
@@ -178,7 +172,7 @@ func GenerateGenres(name string, genres []Genres) map[int]string {
 	data := make(map[int]string)
 	for _, v := range genres {
 		if v.Entry_type == name {
-			data[v.Id] = string(concatination.DataBuffer(
+			data[v.Id] = string(concatenation.DataBuffer(
 				[]string{strconv.Itoa(v.Id), "-", name},
 			))
 		}

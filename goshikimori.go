@@ -16,9 +16,9 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/ghostemeow/goshikimori/internal/concatination"
 	"github.com/ghostemeow/goshikimori/constants"
 	"github.com/ghostemeow/goshikimori/genres"
+	"github.com/ghostemeow/goshikimori/internal/concatenation"
 	"github.com/ghostemeow/goshikimori/internal/models"
 	"github.com/ghostemeow/goshikimori/internal/request"
 )
@@ -38,7 +38,7 @@ func (c *Configuration) SearchUser(name string) (models.Users, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 6(users/) + ?(name)
-		concatination.Url(32+len(name), []string{constants.SITE, "users/", url.QueryEscape(name)}),
+		concatenation.Url(32+len(name), []string{constants.SITE, "users/", url.QueryEscape(name)}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -75,7 +75,7 @@ func (c *Configuration) SearchUsers(name string, r Result) ([]models.Users, int,
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 13(users?search=) + ?(name) + 1(&) + ?(Result)
-		concatination.Url(40+len(name)+len(opt), []string{
+		concatenation.Url(40+len(name)+len(opt), []string{
 			constants.SITE, "users?search=", url.QueryEscape(name), "&", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -108,7 +108,7 @@ func (f *FastId) SearchUserFriends(r Result) ([]models.UserFriends, int, error) 
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 9(/friends?) + ?(Result)
-		concatination.Url(41+len(str_id)+len(opt), []string{
+		concatenation.Url(41+len(str_id)+len(opt), []string{
 			constants.SITE, "users/", str_id, "/friends?" + opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -136,7 +136,7 @@ func (f *FastId) SearchUserClubs() ([]models.Clubs, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 6(/clubs)
-		concatination.Url(38+len(str_id), []string{
+		concatenation.Url(38+len(str_id), []string{
 			constants.SITE, "users/", str_id, "/clubs",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -182,7 +182,7 @@ func (f *FastId) SearchUserAnimeRates(r Result) ([]models.UserAnimeRates, int, e
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 13(/anime_rates?) + ?(Result)
-		concatination.Url(45+len(str_id)+len(opt), []string{
+		concatenation.Url(45+len(str_id)+len(opt), []string{
 			constants.SITE, "users/", str_id, "/anime_rates?" + opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -220,7 +220,7 @@ func (f *FastId) SearchUserMangaRates(r Result) ([]models.UserMangaRates, int, e
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 13(/manga_rates?) + ?(Result)
-		concatination.Url(45+len(str_id)+len(opt), []string{
+		concatenation.Url(45+len(str_id)+len(opt), []string{
 			constants.SITE, "users/", str_id, "/manga_rates?" + opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -248,9 +248,9 @@ func (f *FastId) SearchUserFavourites() (models.UserFavourites, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 11(/favourites)
-		concatination.Url(43+len(str_id), []string{
+		concatenation.Url(43+len(str_id), []string{
 			constants.SITE, "users/", str_id, "/favourites",
-		}),constants.MAX_EXPECTATION,
+		}), constants.MAX_EXPECTATION,
 	)
 	if err != nil {
 		return uf, status, err
@@ -291,7 +291,7 @@ func (f *FastId) SearchUserHistory(r Result) ([]models.UserHistory, int, error) 
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 9(/history?) + ?(Result)
-		concatination.Url(41+len(str_id)+len(opt), []string{
+		concatenation.Url(41+len(str_id)+len(opt), []string{
 			constants.SITE, "users/", str_id, "/history?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -319,7 +319,7 @@ func (f *FastId) SearchUserBans() ([]models.Bans, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 5(/bans)
-		concatination.Url(37+len(str_id), []string{
+		concatenation.Url(37+len(str_id), []string{
 			constants.SITE, "users/", str_id, "/bans",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -345,7 +345,7 @@ func (c *Configuration) WhoAmi() (models.Who, int, error) {
 	data, status, err := request.NewGetRequestWithCancelAndBearer(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 12(users/whoami)
-		concatination.Url(38, []string{constants.SITE, "users/whoami"}),
+		concatenation.Url(38, []string{constants.SITE, "users/whoami"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -372,7 +372,7 @@ func (f *FastId) SearchAnime() (models.Anime, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(animes/) + ?(id)
-		concatination.Url(33+len(str_id), []string{
+		concatenation.Url(33+len(str_id), []string{
 			constants.SITE, "animes/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -478,7 +478,7 @@ func (c *Configuration) SearchAnimes(name string, r Result) ([]models.Animes, in
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 14(animes?search=) + ?(name) + 1(&) + ?(Result)
-		concatination.Url(41+len(name)+len(opt), []string{
+		concatenation.Url(41+len(name)+len(opt), []string{
 			constants.SITE, "animes?search=", url.QueryEscape(name), "&", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -506,7 +506,7 @@ func (f *FastId) SearchManga() (models.Manga, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(mangas/) + ?(id)
-		concatination.Url(33+len(str_id), []string{
+		concatenation.Url(33+len(str_id), []string{
 			constants.SITE, "mangas/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -597,7 +597,7 @@ func (c *Configuration) SearchMangas(name string, r Result) ([]models.Mangas, in
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 14(mangas?search=) + ?(name) + 1(&) + ?(Result)
-		concatination.Url(41+len(name)+len(opt), []string{
+		concatenation.Url(41+len(name)+len(opt), []string{
 			constants.SITE, "mangas?search=", url.QueryEscape(name), "&", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -625,7 +625,7 @@ func (f *FastId) SearchRanobe() (models.Manga, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(ranobe/) + ?(id)
-		concatination.Url(33+len(str_id), []string{
+		concatenation.Url(33+len(str_id), []string{
 			constants.SITE, "ranobe/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -708,7 +708,7 @@ func (c *Configuration) SearchRanobes(name string, r Result) ([]models.Mangas, i
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 14(ranobe?search=) + ?(name) + 1(&) + ?(Result)
-		concatination.Url(41+len(name)+len(opt), []string{
+		concatenation.Url(41+len(name)+len(opt), []string{
 			constants.SITE, "ranobe?search=", url.QueryEscape(name), "&", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -734,7 +734,7 @@ func (c *Configuration) FastIdUser(name string) (*FastId, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 6(users/) + ?(name)
-		concatination.Url(32+len(name), []string{
+		concatenation.Url(32+len(name), []string{
 			constants.SITE, "users/", url.QueryEscape(name)}), constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -759,7 +759,7 @@ func (c *Configuration) FastIdAnime(name string) (*FastId, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 14(animes?search=) + ?(name)
-		concatination.Url(40+len(name), []string{
+		concatenation.Url(40+len(name), []string{
 			constants.SITE, "animes?search=", url.QueryEscape(name)}), constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -792,7 +792,7 @@ func (c *Configuration) FastIdManga(name string) (*FastId, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 14(mangas?search=) + ?(name)
-		concatination.Url(40+len(name), []string{
+		concatenation.Url(40+len(name), []string{
 			constants.SITE, "mangas?search=", url.QueryEscape(name)}), constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -825,7 +825,7 @@ func (c *Configuration) FastIdRanobe(name string) (*FastId, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 14(ranobe?search=) + ?(name)
-		concatination.Url(40+len(name), []string{
+		concatenation.Url(40+len(name), []string{
 			constants.SITE, "ranobe?search=", url.QueryEscape(name)}), constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -858,7 +858,7 @@ func (c *Configuration) FastIdClub(name string) (*FastId, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 13(clubs?search=) + ?(name)
-		concatination.Url(39+len(name), []string{
+		concatenation.Url(39+len(name), []string{
 			constants.SITE, "clubs?search=", url.QueryEscape(name)}), constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -891,7 +891,7 @@ func (c *Configuration) FastIdCharacter(name string) (*FastId, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 25(characters/search?search=) + ?(name)
-		concatination.Url(51+len(name), []string{
+		concatenation.Url(51+len(name), []string{
 			constants.SITE, "characters/search?search=", url.QueryEscape(name),
 		}), constants.MAX_EXPECTATION,
 	)
@@ -926,7 +926,7 @@ func (c *Configuration) FastIdPeople(name string) (*FastId, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 21(people/search?search=) + ?(name)
-		concatination.Url(47+len(name), []string{
+		concatenation.Url(47+len(name), []string{
 			constants.SITE, "people/search?search=", url.QueryEscape(name),
 		}), constants.MAX_EXPECTATION,
 	)
@@ -962,7 +962,7 @@ func (f *FastId) SearchAnimeScreenshots() ([]models.AnimeScreenshots, int, error
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(animes/) + ?(id) + 12(/screenshots)
-		concatination.Url(45+len(str_id), []string{
+		concatenation.Url(45+len(str_id), []string{
 			constants.SITE, "animes/", str_id, "/screenshots",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -990,7 +990,7 @@ func (f *FastId) SearchAnimeFranchise() (models.Franchise, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(animes/) + ?(id) + 10(/franchise)
-		concatination.Url(43+len(str_id), []string{
+		concatenation.Url(43+len(str_id), []string{
 			constants.SITE, "animes/", str_id, "/franchise",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1018,7 +1018,7 @@ func (f *FastId) SearchMangaFranchise() (models.Franchise, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(mangas/) + ?(id) + 10(/franchise)
-		concatination.Url(43+len(str_id), []string{
+		concatenation.Url(43+len(str_id), []string{
 			constants.SITE, "mangas/", str_id, "/franchise",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1046,7 +1046,7 @@ func (f *FastId) SearchRanobeFranchise() (models.Franchise, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(ranobe/) + ?(id) + 10(/franchise)
-		concatination.Url(43+len(str_id), []string{
+		concatenation.Url(43+len(str_id), []string{
 			constants.SITE, "ranobe/", str_id, "/franchise",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1074,7 +1074,7 @@ func (f *FastId) SearchAnimeExternalLinks() ([]models.ExternalLinks, int, error)
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(animes/) + ?(id) + 15(/external_links)
-		concatination.Url(48+len(str_id), []string{
+		concatenation.Url(48+len(str_id), []string{
 			constants.SITE, "animes/", str_id, "/external_links",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1102,7 +1102,7 @@ func (f *FastId) SearchMangaExternalLinks() ([]models.ExternalLinks, int, error)
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(mangas/) + ?(id) + 15(/external_links)
-		concatination.Url(48+len(str_id), []string{
+		concatenation.Url(48+len(str_id), []string{
 			constants.SITE, "mangas/", str_id, "/external_links",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1130,7 +1130,7 @@ func (f *FastId) SearchRanobeExternalLinks() ([]models.ExternalLinks, int, error
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(ranobe/) + ?(id) + 15(/external_links)
-		concatination.Url(48+len(str_id), []string{
+		concatenation.Url(48+len(str_id), []string{
 			constants.SITE, "ranobe/", str_id, "/external_links",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1158,7 +1158,7 @@ func (f *FastId) SearchSimilarAnime() ([]models.Animes, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(animes/) + ?(id) + 8(/similar)
-		concatination.Url(41+len(str_id), []string{
+		concatenation.Url(41+len(str_id), []string{
 			constants.SITE, "animes/", str_id, "/similar",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1186,7 +1186,7 @@ func (f *FastId) SearchSimilarManga() ([]models.Mangas, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(mangas/) + ?(id) + 8(/similar)
-		concatination.Url(41+len(str_id), []string{
+		concatenation.Url(41+len(str_id), []string{
 			constants.SITE, "mangas/", str_id, "/similar",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1214,7 +1214,7 @@ func (f *FastId) SearchSimilarRanobe() ([]models.Mangas, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(ranobe/) + ?(id) + 8(/similar)
-		concatination.Url(41+len(str_id), []string{
+		concatenation.Url(41+len(str_id), []string{
 			constants.SITE, "ranobe/", str_id, "/similar",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1242,7 +1242,7 @@ func (f *FastId) SearchRelatedAnime() ([]models.RelatedAnimes, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(animes/) + ?(id) + 8(/related)
-		concatination.Url(41+len(str_id), []string{
+		concatenation.Url(41+len(str_id), []string{
 			constants.SITE, "animes/", str_id, "/related",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1270,7 +1270,7 @@ func (f *FastId) SearchRelatedManga() ([]models.RelatedMangas, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(mangas/) + ?(id) + 8(/related)
-		concatination.Url(41+len(str_id), []string{
+		concatenation.Url(41+len(str_id), []string{
 			constants.SITE, "mangas/", str_id, "/related",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1298,7 +1298,7 @@ func (f *FastId) SearchRelatedRanobe() ([]models.RelatedMangas, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(ranobe/) + ?(id) + 8(/related)
-		concatination.Url(41+len(str_id), []string{
+		concatenation.Url(41+len(str_id), []string{
 			constants.SITE, "ranobe/", str_id, "/related",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1334,7 +1334,7 @@ func (c *Configuration) SearchClubs(name string, r Result) ([]models.Clubs, int,
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 13(clubs?search=) + ?(name) + 1(&) + ?(Result)
-		concatination.Url(40+len(name)+len(opt), []string{
+		concatenation.Url(40+len(name)+len(opt), []string{
 			constants.SITE, "clubs?search=", url.QueryEscape(name), "&", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1369,7 +1369,7 @@ func (f *FastId) SearchClubAnimes(r Result) ([]models.Animes, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 8(/animes?) + ?(Result)
-		concatination.Url(40+len(str_id)+len(opt), []string{
+		concatenation.Url(40+len(str_id)+len(opt), []string{
 			constants.SITE, "clubs/", str_id, "/animes?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1404,7 +1404,7 @@ func (f *FastId) SearchClubMangas(r Result) ([]models.Mangas, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 8(/mangas?) + ?(Result)
-		concatination.Url(40+len(str_id)+len(opt), []string{
+		concatenation.Url(40+len(str_id)+len(opt), []string{
 			constants.SITE, "clubs/", str_id, "/mangas?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1439,7 +1439,7 @@ func (f *FastId) SearchClubRanobe(r Result) ([]models.Mangas, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 8(/ranobe?) + ?(Result)
-		concatination.Url(40+len(str_id)+len(opt), []string{
+		concatenation.Url(40+len(str_id)+len(opt), []string{
 			constants.SITE, "clubs/", str_id, "/ranobe?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1474,7 +1474,7 @@ func (f *FastId) SearchClubCharacters(r Result) ([]models.CharacterInfo, int, er
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 12(/characters?) + ?(Result)
-		concatination.Url(44+len(str_id)+len(opt), []string{
+		concatenation.Url(44+len(str_id)+len(opt), []string{
 			constants.SITE, "clubs/", str_id, "/characters?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1509,7 +1509,7 @@ func (f *FastId) SearchClubClubs(r Result) ([]models.Clubs, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 7(/clubs?) + ?(Result)
-		concatination.Url(39+len(str_id)+len(opt), []string{
+		concatenation.Url(39+len(str_id)+len(opt), []string{
 			constants.SITE, "clubs/", str_id, "/clubs?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1544,7 +1544,7 @@ func (f *FastId) SearchClubCollections(r Result) ([]models.ClubCollections, int,
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 13(/collections?) + ?(Result)
-		concatination.Url(45+len(str_id)+len(opt), []string{
+		concatenation.Url(45+len(str_id)+len(opt), []string{
 			constants.SITE, "clubs/", str_id, "/collections?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1579,7 +1579,7 @@ func (f *FastId) SearchClubMembers(r Result) ([]models.UserFriends, int, error) 
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 9(/members?) + ?(Result)
-		concatination.Url(41+len(str_id)+len(opt), []string{
+		concatenation.Url(41+len(str_id)+len(opt), []string{
 			constants.SITE, "clubs/", str_id, "/members?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1614,7 +1614,7 @@ func (f *FastId) SearchClubImages(r Result) ([]models.ClubImages, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 8(/images?) + ?(Result)
-		concatination.Url(40+len(str_id)+len(opt), []string{
+		concatenation.Url(40+len(str_id)+len(opt), []string{
 			constants.SITE, "clubs/", str_id, "/images?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1640,7 +1640,7 @@ func (f *FastId) ClubJoin() (int, error) {
 	_, status, err := request.NewPostRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 5(/join)
-		concatination.Url(37+len(str_id), []string{
+		concatenation.Url(37+len(str_id), []string{
 			constants.SITE, "clubs/", str_id, "/join",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1662,7 +1662,7 @@ func (f *FastId) ClubLeave() (int, error) {
 	_, status, err := request.NewPostRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 6(clubs/) + ?(id) + 6(/leave)
-		concatination.Url(38+len(str_id), []string{
+		concatenation.Url(38+len(str_id), []string{
 			constants.SITE, "clubs/", str_id, "/leave",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1691,7 +1691,7 @@ func (f *FastId) SearchAchievement() ([]models.Achievements, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 21(achievements?user_id=) + ?(id)
-		concatination.Url(47+len(str_id), []string{
+		concatenation.Url(47+len(str_id), []string{
 			constants.SITE, "achievements?user_id=", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1718,7 +1718,7 @@ func (f *FastId) SearchAnimeVideos() ([]models.AnimeVideos, int, error) {
 
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
-		concatination.Url(40+len(str_id), []string{
+		concatenation.Url(40+len(str_id), []string{
 			constants.SITE, "animes/", str_id, "/videos",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1746,7 +1746,7 @@ func (f *FastId) SearchAnimeRoles() ([]models.Roles, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(animes/) + ?(id) + 6(/roles)
-		concatination.Url(39+len(str_id), []string{
+		concatenation.Url(39+len(str_id), []string{
 			constants.SITE, "animes/", str_id, "/roles",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1774,7 +1774,7 @@ func (f *FastId) SearchMangaRoles() ([]models.Roles, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(mangas/) + ?(id) + 6(/roles)
-		concatination.Url(39+len(str_id), []string{
+		concatenation.Url(39+len(str_id), []string{
 			constants.SITE, "mangas/", str_id, "/roles",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1802,7 +1802,7 @@ func (f *FastId) SearchRanobeRoles() ([]models.Roles, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(ranobe/) + ?(id) + 6(/roles)
-		concatination.Url(39+len(str_id), []string{
+		concatenation.Url(39+len(str_id), []string{
 			constants.SITE, "ranobe/", str_id, "/roles",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -1828,7 +1828,7 @@ func (c *Configuration) SearchBans() ([]models.Bans, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 4(bans)
-		concatination.Url(30, []string{constants.SITE, "bans"}),
+		concatenation.Url(30, []string{constants.SITE, "bans"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -1860,7 +1860,7 @@ func (c *Configuration) SearchCalendar(r Result) ([]models.Calendar, int, error)
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 9(calendar?) + ?(Result)
-		concatination.Url(35+len(opt), []string{constants.SITE, "calendar?", opt}),
+		concatenation.Url(35+len(opt), []string{constants.SITE, "calendar?", opt}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -1889,7 +1889,7 @@ func (c *Configuration) SearchGenres(name string) ([]genres.Genres, int, error) 
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 12(genres?kind=) + ?(name)
-		concatination.Url(38+len(name), []string{constants.SITE, "genres?kind=", name}),
+		concatenation.Url(38+len(name), []string{constants.SITE, "genres?kind=", name}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -1914,7 +1914,7 @@ func (c *Configuration) SearchStudios() ([]models.Studios, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 7(studios)
-		concatination.Url(33, []string{constants.SITE, "studios"}),
+		concatenation.Url(33, []string{constants.SITE, "studios"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -1939,7 +1939,7 @@ func (c *Configuration) SearchPublishers() ([]models.Publishers, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 10(publishers)
-		concatination.Url(36, []string{constants.SITE, "publishers"}),
+		concatenation.Url(36, []string{constants.SITE, "publishers"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -1964,7 +1964,7 @@ func (c *Configuration) SearchForums() ([]models.Forums, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 6(forums)
-		concatination.Url(32, []string{constants.SITE, "forums"}),
+		concatenation.Url(32, []string{constants.SITE, "forums"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -1991,7 +1991,7 @@ func (f *FastId) AddFriend() (models.FriendRequest, int, error) {
 	data, status, err := request.NewPostRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 8(friends/) + ?(id)
-		concatination.Url(34+len(str_id), []string{
+		concatenation.Url(34+len(str_id), []string{
 			constants.SITE, "friends/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2019,7 +2019,7 @@ func (f *FastId) RemoveFriend() (models.FriendRequest, int, error) {
 	data, status, err := request.NewDeleteRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 8(friends/) + ?(id)
-		concatination.Url(34+len(str_id), []string{
+		concatenation.Url(34+len(str_id), []string{
 			constants.SITE, "friends/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2049,7 +2049,7 @@ func (f *FastId) UserUnreadMessages() (models.UnreadMessages, int, error) {
 	data, status, err := request.NewGetRequestWithCancelAndBearer(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 16(/unread_messages)
-		concatination.Url(48+len(str_id), []string{
+		concatenation.Url(48+len(str_id), []string{
 			constants.SITE, "users/", str_id, "/unread_messages",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2089,7 +2089,7 @@ func (f *FastId) UserMessages(r Result) ([]models.Messages, int, error) {
 	data, status, err := request.NewGetRequestWithCancelAndBearer(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 10(/messages?) + ?(Result)
-		concatination.Url(42+len(str_id)+len(opt), []string{
+		concatenation.Url(42+len(str_id)+len(opt), []string{
 			constants.SITE, "users/", str_id, "/messages?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2115,7 +2115,7 @@ func (c *Configuration) SearchConstantsAnime() (models.Constants, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 15(constants/anime)
-		concatination.Url(41, []string{constants.SITE, "constants/anime"}),
+		concatenation.Url(41, []string{constants.SITE, "constants/anime"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -2140,7 +2140,7 @@ func (c *Configuration) SearchConstantsManga() (models.Constants, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 15(constants/manga)
-		concatination.Url(41, []string{constants.SITE, "constants/manga"}),
+		concatenation.Url(41, []string{constants.SITE, "constants/manga"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -2165,7 +2165,7 @@ func (c *Configuration) SearchConstantsUserRate() (models.ConstantsUserRate, int
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 19(constants/user_rate)
-		concatination.Url(45, []string{constants.SITE, "constants/user_rate"}),
+		concatenation.Url(45, []string{constants.SITE, "constants/user_rate"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -2190,7 +2190,7 @@ func (c *Configuration) SearchConstantsClub() (models.ConstantsClub, int, error)
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 14(constants/club)
-		concatination.Url(40, []string{constants.SITE, "constants/club"}),
+		concatenation.Url(40, []string{constants.SITE, "constants/club"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -2215,7 +2215,7 @@ func (c *Configuration) SearchConstantsSmileys() ([]models.ConstantsSmileys, int
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 17(constants/smileys)
-		concatination.Url(43, []string{constants.SITE, "constants/smileys"}),
+		concatenation.Url(43, []string{constants.SITE, "constants/smileys"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -2304,7 +2304,7 @@ func (c *Configuration) RandomAnimes(r Result) ([]models.Animes, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 20(animes?order=random&) + ?(Result)
-		concatination.Url(46+len(opt), []string{
+		concatenation.Url(46+len(opt), []string{
 			constants.SITE, "animes?order=random&", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2379,7 +2379,7 @@ func (c *Configuration) RandomMangas(r Result) ([]models.Mangas, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 20(mangas?order=random&) + ?(Result)
-		concatination.Url(46+len(opt), []string{
+		concatenation.Url(46+len(opt), []string{
 			constants.SITE, "mangas?order=random&", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2445,7 +2445,7 @@ func (c *Configuration) RandomRanobes(r Result) ([]models.Mangas, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 20(ranobe?order=random&) + ?(Result)
-		concatination.Url(46+len(opt), []string{
+		concatenation.Url(46+len(opt), []string{
 			constants.SITE, "ranobe?order=random&", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2473,7 +2473,7 @@ func (f *FastId) SearchCharacter() (models.Character, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 11(characters/) + ?(id)
-		concatination.Url(37+len(str_id), []string{
+		concatenation.Url(37+len(str_id), []string{
 			constants.SITE, "characters/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2501,7 +2501,7 @@ func (c *Configuration) SearchCharacters(name string) ([]models.CharacterInfo, i
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 25(characters/search?search=) + ?(name)
-		concatination.Url(51+len(name), []string{constants.SITE,
+		concatenation.Url(51+len(name), []string{constants.SITE,
 			"characters/search?search=", url.QueryEscape(name)}),
 		constants.MAX_EXPECTATION,
 	)
@@ -2529,7 +2529,7 @@ func (f *FastId) SearchPeople() (models.People, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(people/) + ?(id)
-		concatination.Url(33+len(str_id), []string{
+		concatenation.Url(33+len(str_id), []string{
 			constants.SITE, "people/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2566,7 +2566,7 @@ func (c *Configuration) SearchPeoples(name string, r Result) ([]models.AllPeople
 
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
-		concatination.Url(48+len(name)+len(opt), []string{
+		concatenation.Url(48+len(name)+len(opt), []string{
 			constants.SITE, "people/search?search=", url.QueryEscape(name), "&", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2609,7 +2609,7 @@ func (f *FastId) FavoritesCreate(linked_type, kind string) (models.Favorites, in
 	data, status, err := request.NewPostRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 10(favorites/) + ?(linked_type) + 1(/) + ?(id) + 1(/) + ?(kind)
-		concatination.Url(38+len(linked_type)+len(str_id)+len(kind), []string{
+		concatenation.Url(38+len(linked_type)+len(str_id)+len(kind), []string{
 			constants.SITE, "favorites/", linked_type, "/", str_id, "/", kind,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2643,7 +2643,7 @@ func (f *FastId) FavoritesDelete(linked_type string) (models.Favorites, int, err
 	data, status, err := request.NewDeleteRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 10(favorites/) + ?(linked_type) + 1(/) + ?(id)
-		concatination.Url(37+len(linked_type)+len(str_id), []string{
+		concatenation.Url(37+len(linked_type)+len(str_id), []string{
 			constants.SITE, "favorites/", linked_type, "/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2675,7 +2675,7 @@ func (f *FastId) FavoritesReorder(position int) (int, error) {
 	_, status, err := request.NewReorderPostRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 10(favorites/) + ?(id) + 8(/reorder)
-		concatination.Url(44+len(str_id), []string{
+		concatenation.Url(44+len(str_id), []string{
 			constants.SITE, "favorites/", str_id, "/reorder",
 		}), position, constants.MAX_EXPECTATION,
 	)
@@ -2699,7 +2699,7 @@ func (f *FastId) AddIgnoreUser() (models.IgnoreUser, int, error) {
 	data, status, err := request.NewPostRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 9(v2/users/) + ?(id) + 7(/ignore)
-		concatination.Url(42+len(str_id), []string{
+		concatenation.Url(42+len(str_id), []string{
 			constants.SITE, "v2/users/", str_id, "/ignore",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2727,7 +2727,7 @@ func (f *FastId) RemoveIgnoreUser() (models.IgnoreUser, int, error) {
 	data, status, err := request.NewDeleteRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 9(v2/users/) + ?(id) + 7(/ignore)
-		concatination.Url(42+len(str_id), []string{
+		concatenation.Url(42+len(str_id), []string{
 			constants.SITE, "v2/users/", str_id, "/ignore",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2753,7 +2753,7 @@ func (c *Configuration) Dialogs() ([]models.Dialogs, int, error) {
 	data, status, err := request.NewGetRequestWithCancelAndBearer(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 7(dialogs)
-		concatination.Url(33, []string{constants.SITE, "dialogs"}),
+		concatenation.Url(33, []string{constants.SITE, "dialogs"}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -2782,7 +2782,7 @@ func (f *FastId) SearchDialogs() ([]models.SearchDialogs, int, error) {
 	data, status, err := request.NewGetRequestWithCancelAndBearer(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 8(dialogs/) + ?(id)
-		concatination.Url(34+len(str_id), []string{
+		concatenation.Url(34+len(str_id), []string{
 			constants.SITE, "dialogs/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2812,7 +2812,7 @@ func (f *FastId) DeleteDialogs() (models.FriendRequest, int, error) {
 	data, status, err := request.NewDeleteRequestWithCancel(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 8(dialogs/) + ?(id)
-		concatination.Url(34+len(str_id), []string{
+		concatenation.Url(34+len(str_id), []string{
 			constants.SITE, "dialogs/", str_id,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2841,7 +2841,7 @@ func (f *FastId) UserBriefInfo() (models.Info, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 5(/info)
-		concatination.Url(37+len(str_id), []string{
+		concatenation.Url(37+len(str_id), []string{
 			constants.SITE, "users/", str_id, "/info",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2863,7 +2863,7 @@ func (c *Configuration) SignOut() ([]byte, int, error) {
 	data, status, err := request.NewPostRequestWithCancel(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 14(users/sign_out)
-		concatination.Url(40, []string{
+		concatenation.Url(40, []string{
 			constants.SITE, "users/sign_out",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2892,7 +2892,7 @@ func (c *Configuration) ActiveUsers() ([]int, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 18(stats/active_users)
-		concatination.Url(44, []string{
+		concatenation.Url(44, []string{
 			constants.SITE, "stats/active_users",
 		}), constants.CUSTOM_MAX_EXPECTATION_ACTIVE_USERS,
 	)
@@ -2925,7 +2925,7 @@ func (f *FastId) SearchTopicsAnime(r Result) ([]models.Topics, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(animes/) + ?(id) + 8(/topics?) + ?(Result)
-		concatination.Url(41+len(str_id)+len(opt), []string{
+		concatenation.Url(41+len(str_id)+len(opt), []string{
 			constants.SITE, "animes/", str_id, "/topics?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2958,7 +2958,7 @@ func (f *FastId) SearchTopicsManga(r Result) ([]models.Topics, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(mangas/) + ?(id) + 8(/topics?) + ?(Result)
-		concatination.Url(41+len(str_id)+len(opt), []string{
+		concatenation.Url(41+len(str_id)+len(opt), []string{
 			constants.SITE, "mangas/", str_id, "/topics?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -2991,7 +2991,7 @@ func (f *FastId) SearchTopicsRanobe(r Result) ([]models.Topics, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		f.Conf.Application,
 		// 26(constants.SITE) + 7(ranobe/) + ?(id) + 8(/topics?) + ?(Result)
-		concatination.Url(41+len(str_id)+len(opt), []string{
+		concatenation.Url(41+len(str_id)+len(opt), []string{
 			constants.SITE, "ranobe/", str_id, "/topics?", opt,
 		}), constants.MAX_EXPECTATION,
 	)
@@ -3046,7 +3046,7 @@ func (c *Configuration) SearchTopics(r Result) ([]models.Topics, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 7(topics?) + ?(Result)
-		concatination.Url(33+len(opt), []string{constants.SITE, "topics?", opt}),
+		concatenation.Url(33+len(opt), []string{constants.SITE, "topics?", opt}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -3079,7 +3079,7 @@ func (c *Configuration) SearchTopicsUpdates(r Result) ([]models.TopicsUpdates, i
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 15(topics/updates?) + ?(Result)
-		concatination.Url(41+len(opt), []string{constants.SITE, "topics/updates?", opt}),
+		concatenation.Url(41+len(opt), []string{constants.SITE, "topics/updates?", opt}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -3109,7 +3109,7 @@ func (c *Configuration) SearchTopicsHot(r Result) ([]models.Topics, int, error) 
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 11(topics/hot?) + ?(Result)
-		concatination.Url(37+len(opt), []string{constants.SITE, "topics/hot?", opt}),
+		concatenation.Url(37+len(opt), []string{constants.SITE, "topics/hot?", opt}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -3138,7 +3138,7 @@ func (c *Configuration) SearchTopicsId(id int) (models.TopicsId, int, error) {
 	data, status, err := request.NewGetRequestWithCancel(
 		c.Application,
 		// 26(constants.SITE) + 7(topics/) + ?(id)
-		concatination.Url(33+len(str_id), []string{constants.SITE, "topics/", str_id}),
+		concatenation.Url(33+len(str_id), []string{constants.SITE, "topics/", str_id}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -3167,12 +3167,12 @@ func (c *Configuration) AddIgnoreTopic(id int) (models.IgnoreTopic, int, error) 
 	data, status, err := request.NewPostRequestWithCancel(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 10(v2/topics/) + ?(id) + 7(/ignore)
-		concatination.Url(43+len(str_id), []string{
+		concatenation.Url(43+len(str_id), []string{
 			constants.SITE, "v2/topics/", str_id, "/ignore",
 		}), constants.MAX_EXPECTATION,
 	)
 	if err != nil {
-		return i, 0, err
+		return i, status, err
 	}
 
 	if err := json.Unmarshal(data, &i); err != nil {
@@ -3197,12 +3197,12 @@ func (c *Configuration) RemoveIgnoreTopic(id int) (models.IgnoreTopic, int, erro
 	data, status, err := request.NewDeleteRequestWithCancel(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 10(v2/topics/) + ?(id) + 7(/ignore)
-		concatination.Url(43+len(str_id), []string{
+		concatenation.Url(43+len(str_id), []string{
 			constants.SITE, "v2/topics/", str_id, "/ignore",
 		}), constants.MAX_EXPECTATION,
 	)
 	if err != nil {
-		return i, 0, err
+		return i, status, err
 	}
 
 	if err := json.Unmarshal(data, &i); err != nil {
@@ -3214,18 +3214,19 @@ func (c *Configuration) RemoveIgnoreTopic(id int) (models.IgnoreTopic, int, erro
 
 // Only the application needs to be specified in SetConfiguration().
 //
-// Schema: customized request.
+// Query: customized request built by AnimeSchema or similar.
 //
 // How to use and all the information you need [here].
 //
 // [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
-func (c *Configuration) SearchGraphql(schema string) (models.GraphQL, int, error) {
+func (c *Configuration) SearchGraphql(query string) (models.GraphQL, int, error) {
 	var g models.GraphQL
 
 	data, status, err := request.NewGraphQLPostRequestWithCancel(
 		c.Application,
-		// 26(constants.SITE) + ?(schema)
-		concatination.Url(26+len(schema), []string{constants.SITE, schema}),
+		// 26(constants.SITE) + 7(graphql)
+		concatenation.Url(33, []string{constants.SITE, "graphql"}),
+		query,
 		constants.CUSTOM_MAX_EXPECTATION_GRAPHQL,
 	)
 	if err != nil {
@@ -3258,7 +3259,7 @@ func (c *Configuration) ReadMessage(id int) (models.Messages, int, error) {
 	data, status, err := request.NewGetRequestWithCancelAndBearer(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 9(messages/) + ?(id)
-		concatination.Url(35+len(str_id), []string{constants.SITE, "messages/", str_id}), constants.MAX_EXPECTATION,
+		concatenation.Url(35+len(str_id), []string{constants.SITE, "messages/", str_id}), constants.MAX_EXPECTATION,
 	)
 	if err != nil {
 		return m, status, err
@@ -3294,7 +3295,7 @@ func (c *Configuration) SendMessage(from_id, to_id int, message string) (models.
 	data, status, err := request.NewSendMessagePostRequestWithCancel(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 8(messages)
-		concatination.Url(34, []string{constants.SITE, "messages"}),
+		concatenation.Url(34, []string{constants.SITE, "messages"}),
 		message, from_id, to_id, constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -3329,7 +3330,7 @@ func (c *Configuration) ChangeMessage(id int, message string) (models.Messages, 
 	data, status, err := request.NewChangeMessagePutRequestWithCancel(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 9(messages/) + ?(id)
-		concatination.Url(35+len(str_id), []string{constants.SITE, "messages/", str_id}),
+		concatenation.Url(35+len(str_id), []string{constants.SITE, "messages/", str_id}),
 		message, constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -3358,7 +3359,7 @@ func (c *Configuration) DeleteMessage(id int) (int, error) {
 	_, status, err := request.NewDeleteMessageDeleteRequestWithCancel(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 9(messages/) + ?(id)
-		concatination.Url(35+len(str_id), []string{constants.SITE, "messages/", str_id}),
+		concatenation.Url(35+len(str_id), []string{constants.SITE, "messages/", str_id}),
 		constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -3387,7 +3388,7 @@ func (c *Configuration) MarkReadMessages(ids string, is_read int) (int, error) {
 	_, status, err := request.NewMarkReadPostRequestWithCancel(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 18(messages/mark_read)
-		concatination.Url(44, []string{
+		concatenation.Url(44, []string{
 			constants.SITE, "messages/mark_read",
 		}), ids, is_read, constants.MAX_EXPECTATION,
 	)
@@ -3416,7 +3417,7 @@ func (f *FastId) UnreadMessagesIds(name string) ([]int, int, error) {
 	data, status, err := request.NewGetRequestWithCancelAndBearer(
 		f.Conf.Application, f.Conf.AccessToken,
 		// 26(constants.SITE) + 6(users/) + ?(id) + 16(/unread_messages)
-		concatination.Url(48+len(str_id), []string{
+		concatenation.Url(48+len(str_id), []string{
 			constants.SITE, "users/", str_id, "/unread_messages",
 		}), constants.MAX_EXPECTATION,
 	)
@@ -3466,7 +3467,7 @@ func (c *Configuration) ReadAllMessages(name string) (int, error) {
 	_, status, err := request.NewReadDeleteAllPostRequestWithCancel(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 17(messages/read_all)
-		concatination.Url(43, []string{constants.SITE, "messages/read_all"}),
+		concatenation.Url(43, []string{constants.SITE, "messages/read_all"}),
 		name, constants.MAX_EXPECTATION,
 	)
 	if err != nil {
@@ -3493,11 +3494,11 @@ func (c *Configuration) DeleteAllMessages(name string) (int, error) {
 	_, status, err := request.NewReadDeleteAllPostRequestWithCancel(
 		c.Application, c.AccessToken,
 		// 26(constants.SITE) + 19(messages/delete_all)
-		concatination.Url(45, []string{constants.SITE, "messages/delete_all"}),
+		concatenation.Url(45, []string{constants.SITE, "messages/delete_all"}),
 		name, constants.MAX_EXPECTATION,
 	)
 	if err != nil {
-		return 0, err
+		return status, err
 	}
 
 	return status, nil

@@ -3,17 +3,20 @@ package request
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/ghostemeow/goshikimori/internal/concatination"
+	"github.com/ghostemeow/goshikimori/internal/concatenation"
 )
 
 // Return the date as bytes.
 //
 // If the context time is exceeded returns -1.
+//
+// A non-2xx status code is returned as an error along with the status.
 func sendRequest(req *http.Request) ([]byte, int, error) {
 	var client = &http.Client{}
 
@@ -28,12 +31,20 @@ func sendRequest(req *http.Request) ([]byte, int, error) {
 		return nil, resp.StatusCode, err
 	}
 
-	return data, resp.StatusCode, err
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		msg := string(data)
+		if len(msg) > 512 {
+			msg = msg[:512]
+		}
+		return data, resp.StatusCode, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, msg)
+	}
+
+	return data, resp.StatusCode, nil
 }
 
 // Normal GET request with User-Agent only.
 func NewGetRequestWithCancel(application, search string, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, search, nil)
@@ -52,7 +63,7 @@ func NewGetRequestWithCancel(application, search string, number time.Duration) (
 
 // For certain GET requests where a Bearer is needed.
 func NewGetRequestWithCancelAndBearer(application, accessToken, search string, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, search, nil)
@@ -60,7 +71,7 @@ func NewGetRequestWithCancelAndBearer(application, accessToken, search string, n
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concatination.Bearer(accessToken))
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
 
 	data, status, err := sendRequest(req)
 	if err != nil {
@@ -73,7 +84,7 @@ func NewGetRequestWithCancelAndBearer(application, accessToken, search string, n
 // To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
 func NewPostRequestWithCancel(application, accessToken, search string, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, search, nil)
@@ -81,7 +92,7 @@ func NewPostRequestWithCancel(application, accessToken, search string, number ti
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concatination.Bearer(accessToken))
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -92,13 +103,17 @@ func NewPostRequestWithCancel(application, accessToken, search string, number ti
 	return data, status, nil
 }
 
-// GraphQL: POST request.
+// GraphQL: POST request with the query in the JSON body.
 // For GraphQL you only need User-Agent at POST request.
-func NewGraphQLPostRequestWithCancel(application, search string, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+func NewGraphQLPostRequestWithCancel(application, search, query string, number time.Duration) ([]byte, int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, search, nil)
+	body := concatenation.DataBuffer([]string{
+		"{\"query\": ", strconv.Quote(query), "}",
+	})
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, search, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, -1, err
 	}
@@ -116,12 +131,12 @@ func NewGraphQLPostRequestWithCancel(application, search string, number time.Dur
 // Reorder: POST request. To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
 func NewReorderPostRequestWithCancel(application, accessToken, search string, position int, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, search,
-		bytes.NewBuffer(concatination.DataBuffer(
+		bytes.NewBuffer(concatenation.DataBuffer(
 			[]string{"{\"new_index\": ", "\"", strconv.Itoa(position), "\"", "}"},
 		)),
 	)
@@ -129,7 +144,7 @@ func NewReorderPostRequestWithCancel(application, accessToken, search string, po
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concatination.Bearer(accessToken))
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -143,12 +158,12 @@ func NewReorderPostRequestWithCancel(application, accessToken, search string, po
 // Mark order messages: POST request. To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
 func NewMarkReadPostRequestWithCancel(application, accessToken, search, ids string, is_read int, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, search,
-		bytes.NewBuffer(concatination.DataBuffer([]string{
+		bytes.NewBuffer(concatenation.DataBuffer([]string{
 			"{\"ids\": ", "\"", ids, "\"", ", ", "\"is_read\": ",
 			"\"", strconv.Itoa(is_read), "\"", "}",
 		})),
@@ -157,7 +172,7 @@ func NewMarkReadPostRequestWithCancel(application, accessToken, search, ids stri
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concatination.Bearer(accessToken))
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -171,12 +186,12 @@ func NewMarkReadPostRequestWithCancel(application, accessToken, search, ids stri
 // Read/Delete all messages: POST request. To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
 func NewReadDeleteAllPostRequestWithCancel(application, accessToken, search, name string, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, search,
-		bytes.NewBuffer(concatination.DataCopy(
+		bytes.NewBuffer(concatenation.DataCopy(
 			33+len(name),
 			[]string{"{\"frontend\": ", "\"false\", ", "\"type\": ", "\"", name, "\"", "}"},
 		)),
@@ -185,7 +200,7 @@ func NewReadDeleteAllPostRequestWithCancel(application, accessToken, search, nam
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concatination.Bearer(accessToken))
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -199,12 +214,12 @@ func NewReadDeleteAllPostRequestWithCancel(application, accessToken, search, nam
 // Send message: POST request. To work correctly with the POST method,
 // make sure that your application has all the necessary permissions.
 func NewSendMessagePostRequestWithCancel(application, accessToken, search, body string, from_id, to_id int, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, search,
-		bytes.NewBuffer(concatination.DataBuffer([]string{
+		bytes.NewBuffer(concatenation.DataBuffer([]string{
 			"{\"frontend\": \"false\", \"message\": {\"body\": \"", body,
 			"\", \"from_id\": \"", strconv.Itoa(from_id),
 			"\", \"kind\": \"Private\", \"to_id\": \"", strconv.Itoa(to_id), "\"}}",
@@ -214,7 +229,7 @@ func NewSendMessagePostRequestWithCancel(application, accessToken, search, body 
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concatination.Bearer(accessToken))
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -228,12 +243,12 @@ func NewSendMessagePostRequestWithCancel(application, accessToken, search, body 
 // Change message. To work correctly with the PUT method,
 // make sure that your application has all the necessary permissions.
 func NewChangeMessagePutRequestWithCancel(application, accessToken, search, body string, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(
 		ctx, http.MethodPut, search,
-		bytes.NewBuffer(concatination.DataCopy(
+		bytes.NewBuffer(concatenation.DataCopy(
 			46+len(body),
 			[]string{"{\"frontend\": \"false\", \"message\": {\"body\": \"", body, "\"}}"},
 		)),
@@ -242,7 +257,7 @@ func NewChangeMessagePutRequestWithCancel(application, accessToken, search, body
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concatination.Bearer(accessToken))
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -256,7 +271,7 @@ func NewChangeMessagePutRequestWithCancel(application, accessToken, search, body
 // Delete message. To work correctly with the DELETE method,
 // make sure that your application has all the necessary permissions.
 func NewDeleteMessageDeleteRequestWithCancel(application, accessToken, search string, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, search, nil)
@@ -264,7 +279,7 @@ func NewDeleteMessageDeleteRequestWithCancel(application, accessToken, search st
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concatination.Bearer(accessToken))
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
 	req.Header.Set("Content-Type", "application/json")
 
 	data, status, err := sendRequest(req)
@@ -278,7 +293,7 @@ func NewDeleteMessageDeleteRequestWithCancel(application, accessToken, search st
 // To work correctly with the DELETE method,
 // make sure that your application has all the necessary permissions.
 func NewDeleteRequestWithCancel(application, accessToken, search string, number time.Duration) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), number*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), number)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, search, nil)
@@ -286,7 +301,7 @@ func NewDeleteRequestWithCancel(application, accessToken, search string, number 
 		return nil, -1, err
 	}
 	req.Header.Add("User-Agent", application)
-	req.Header.Add("Authorization", concatination.Bearer(accessToken))
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
 
 	data, status, err := sendRequest(req)
 	if err != nil {

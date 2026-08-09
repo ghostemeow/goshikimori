@@ -167,9 +167,10 @@ func TestAnimeGraphql(t *testing.T) {
 	s.Run()
 
 	c := conf()
-	sch, _ := AnimeSchema(
+	sch := AnimeSchema(
 		ValuesSchema("id", "malId", "name", "rating", "kind", "episodes"),
-		"initial d first stage", 1, 1, "", "", "", "", "", "", "", false, nil,
+		"initial d first stage",
+		AnimeOptions{Page: 1, Limit: 1},
 	)
 	a, _, _ := c.SearchGraphql(sch)
 
@@ -185,9 +186,10 @@ func TestAnimeGraphql(t *testing.T) {
 
 func TestMangaGraphQL(t *testing.T) {
 	c := conf()
-	s, _ := MangaSchema(
+	s := MangaSchema(
 		ValuesSchema("id", "malId", "name", "kind", "status", "volumes"),
-		"initial d", 1, 1, "", "", "", "", "", false, nil,
+		"initial d",
+		MangaOptions{Page: 1, Limit: 1},
 	)
 	m, _, _ := c.SearchGraphql(s)
 
@@ -203,9 +205,10 @@ func TestMangaGraphQL(t *testing.T) {
 
 func TestCharacterGraphQL(t *testing.T) {
 	c := conf()
-	s, _ := CharacterSchema(
+	s := CharacterSchema(
 		ValuesSchema("id", "malId", "name", "isManga"),
-		"Natsuno Yuuki", 1, 1,
+		"Natsuno Yuuki",
+		CharacterOptions{Page: 1, Limit: 1},
 	)
 	ch, _, _ := c.SearchGraphql(s)
 
@@ -220,9 +223,10 @@ func TestCharacterGraphQL(t *testing.T) {
 
 func TestPeopleGraphQL(t *testing.T) {
 	c := conf()
-	s, _ := PeopleSchema(
+	s := PeopleSchema(
 		ValuesSchema("id", "name", "birthOn{year}"),
-		"satsuki", 1, 1, true, false, false,
+		"satsuki",
+		PeopleOptions{Page: 1, Limit: 1, IsSeyu: true},
 	)
 	p, _, _ := c.SearchGraphql(s)
 

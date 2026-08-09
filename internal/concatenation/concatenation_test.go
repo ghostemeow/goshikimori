@@ -1,4 +1,4 @@
-package concatination
+package concatenation
 
 import (
 	"bytes"

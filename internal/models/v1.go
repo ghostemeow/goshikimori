@@ -170,7 +170,7 @@ type Who struct {
 	Name           string    `json:"name"`
 	Sex            string    `json:"sex"`
 	Website        string    `json:"website"`
-	Birth_on       int       `json:"birst_on"`
+	Birth_on       int       `json:"birth_on"`
 	Locale         string    `json:"locale"`
 }
 
@@ -716,7 +716,7 @@ type Info struct {
 	Name           string    `json:"name"`
 	Sex            string    `json:"sex"`
 	Website        string    `json:"website"`
-	Birth_on       int       `json:"birst_on"`
+	Birth_on       int       `json:"birth_on"`
 	Full_years     int       `json:"full_years"`
 	Locale         string    `json:"locale"`
 }
@@ -793,7 +793,7 @@ type AnimangaId struct {
 	HTMLBody       string      `json:"html_body"`
 	Overall        int         `json:"overall"`
 	Storyline      int         `json:"storyline"`
-	Music          int         `json:"musc"`
+	Music          int         `json:"music"`
 	Characters     int         `json:"characters"`
 	Animation      int         `json:"animation"`
 	Created_at     time.Time   `json:"created_at"`
@@ -828,7 +828,7 @@ type Character struct {
 	Image             AnimeSize         `json:"image"`
 	Url               string            `json:"url"`
 	Altname           string            `json:"altname"`
-	Japanese          string            `json:"yapanese"`
+	Japanese          string            `json:"japanese"`
 	Description       string            `json:"description"`
 	DescriptionHTML   string            `json:"description_html"`
 	DescriptionSource string            `json:"description_source"`

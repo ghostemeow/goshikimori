@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ghostemeow/goshikimori/internal/concatination"
+	"github.com/ghostemeow/goshikimori/internal/concatenation"
 )
 
 func TestNewGetRequestWithCancel(t *testing.T) {
@@ -25,7 +25,7 @@ func TestNewGetRequestWithCancel(t *testing.T) {
 	}))
 	defer server.Close()
 
-	data, status, err := NewGetRequestWithCancel("test-app", server.URL, 5 * time.Second)
+	data, status, err := NewGetRequestWithCancel("test-app", server.URL, 5*time.Second)
 	if err != nil {
 		t.Fatalf("expected nil, got %s", err.Error())
 	}
@@ -53,7 +53,7 @@ func TestNewGetRequestWithCancelAndBearer(t *testing.T) {
 	}))
 	defer server.Close()
 
-	data, status, err := NewGetRequestWithCancelAndBearer("test-app", "test-token", server.URL, 5 * time.Second)
+	data, status, err := NewGetRequestWithCancelAndBearer("test-app", "test-token", server.URL, 5*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,7 +80,7 @@ func TestNewPostRequestWithCancel(t *testing.T) {
 	}))
 	defer server.Close()
 
-	_, status, err := NewPostRequestWithCancel("test-app", "test-token", server.URL, 5 * time.Second)
+	_, status, err := NewPostRequestWithCancel("test-app", "test-token", server.URL, 5*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -94,15 +94,19 @@ func TestNewGraphQLPostRequestWithCancel(t *testing.T) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, received %s", r.Method)
 		}
-		if header := r.Header.Get("User-Agent"); header != "test-app" {
-			t.Errorf("invalid User-Agent: %s", header)
+		if header := r.Header.Get("Content-Type"); header != "application/json" {
+			t.Errorf("invalid Content-Type: %s", header)
+		}
+		body, _ := io.ReadAll(r.Body)
+		if string(body) != `{"query": "{animes(search: \"initial d\"){id}}"}` {
+			t.Errorf("invalid request body: %s", string(body))
 		}
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(`{"data": {}}`))
 	}))
 	defer server.Close()
 
-	data, status, err := NewGraphQLPostRequestWithCancel("test-app", server.URL, 5 * time.Second)
+	data, status, err := NewGraphQLPostRequestWithCancel("test-app", server.URL, `{animes(search: "initial d"){id}}`, 5*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -139,7 +143,7 @@ func TestNewReorderPostRequestWithCancel(t *testing.T) {
 	}))
 	defer server.Close()
 
-	_, status, err := NewReorderPostRequestWithCancel("test-app", "test-token", server.URL, 7, 5 * time.Second)
+	_, status, err := NewReorderPostRequestWithCancel("test-app", "test-token", server.URL, 7, 5*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -162,7 +166,7 @@ func TestNewSendMessagePostRequestWithCancel(t *testing.T) {
 		body, _ := io.ReadAll(r.Body)
 		var payload struct {
 			Frontend string `json:"frontend"`
-			Message struct {
+			Message  struct {
 				Body   string `json:"body"`
 				FromID string `json:"from_id"`
 				Kind   string `json:"kind"`
@@ -184,7 +188,7 @@ func TestNewSendMessagePostRequestWithCancel(t *testing.T) {
 
 	_, status, err := NewSendMessagePostRequestWithCancel(
 		"test-app", "test-token", server.URL,
-		"test message", 1, 2, 5 * time.Second,
+		"test message", 1, 2, 5*time.Second,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -209,7 +213,7 @@ func TestNewDeleteRequestWithCancel(t *testing.T) {
 	}))
 	defer server.Close()
 
-	data, status, err := NewDeleteRequestWithCancel("test-app", "test-token", server.URL, 5 * time.Second)
+	data, status, err := NewDeleteRequestWithCancel("test-app", "test-token", server.URL, 5*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -239,7 +243,7 @@ func TestNewMarkReadPostRequestWithCancel(t *testing.T) {
 
 	data, status, err := NewMarkReadPostRequestWithCancel(
 		"test-app", "test-token", server.URL,
-		concatination.IdsToString([]int{123, 456, 789}), 1337, 5 * time.Second,
+		concatenation.IdsToString([]int{123, 456, 789}), 1337, 5*time.Second,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -283,7 +287,7 @@ func TestNewReadDeleteAllPostRequestWithCancel(t *testing.T) {
 
 	_, status, err := NewReadDeleteAllPostRequestWithCancel(
 		"test-app", "test-token", server.URL,
-		"inbox", 5 * time.Second,
+		"inbox", 5*time.Second,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -307,7 +311,7 @@ func TestNewChangeMessagePutRequestWithCancel(t *testing.T) {
 		body, _ := io.ReadAll(r.Body)
 		var payload struct {
 			Frontend string `json:"frontend"`
-			Message struct {
+			Message  struct {
 				Body string `json:"body"`
 			} `json:"message"`
 		}
@@ -326,7 +330,7 @@ func TestNewChangeMessagePutRequestWithCancel(t *testing.T) {
 
 	_, status, err := NewChangeMessagePutRequestWithCancel(
 		"test-app", "test-token", server.URL,
-		"updated message text her", 5 * time.Second,
+		"updated message text her", 5*time.Second,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -351,7 +355,7 @@ func TestNewDeleteMessageDeleteRequestWithCancel(t *testing.T) {
 	}))
 	defer server.Close()
 
-	data, status, err := NewDeleteMessageDeleteRequestWithCancel("test-app", "test-token", server.URL, 5 * time.Second)
+	data, status, err := NewDeleteMessageDeleteRequestWithCancel("test-app", "test-token", server.URL, 5*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}

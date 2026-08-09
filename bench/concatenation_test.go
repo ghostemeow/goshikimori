@@ -3,14 +3,14 @@ package bench
 import (
 	"testing"
 
-	"github.com/ghostemeow/goshikimori/internal/concatination"
 	"github.com/ghostemeow/goshikimori/genres"
+	"github.com/ghostemeow/goshikimori/internal/concatenation"
 )
 
 func BenchmarkIdsToString(b *testing.B) {
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_ = concatination.IdsToString([]int{1336, 1337, 1338, 1339, 1400})
+		_ = concatenation.IdsToString([]int{1336, 1337, 1338, 1339, 1400})
 	}
 	b.StopTimer()
 }
@@ -18,7 +18,7 @@ func BenchmarkIdsToString(b *testing.B) {
 func BenchmarkUrl(b *testing.B) {
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		_ = concatination.Url(46, []string{"https://shikimori.one/api/", "users/", "search=arctica"})
+		_ = concatenation.Url(46, []string{"https://shikimori.one/api/", "users/", "search=arctica"})
 	}
 	b.StopTimer()
 }

@@ -24,31 +24,25 @@ func main() {
 
   // The first parameter is the values of the anime; values: "id", "name", "score", "episodes", "airedOn{year month day date}".
   // The second parameter is the name of the anime; name: "initial d".
-  // Now let's move on to the interface:
-  //    1)  page: 1;
-  //    2)  limit: 5;
-  //    3)  score: 8;
-  //    4)  order: ""; skipped;
-  //    5)  kind: ANIME_KIND_TV;
-  //    6)  status: ANIME_STATUS_RELEASED;
-  //    7)  season: ""; skipped;
-  //    8)  duration: ""; skipped;
-  //    9)  rating: ANIME_RATING_PG_13;
-  //    10) mylist: ""; skipped;
-  //    11) censored: false;
-  //    12) genre: nil; skipped
+  // The third parameter is the AnimeOptions struct; the zero value of a field means the option is skipped:
+  //    Page: 1;
+  //    Limit: 5;
+  //    Score: 8;
+  //    Kind: ANIME_KIND_TV;
+  //    Status: ANIME_STATUS_RELEASED;
+  //    Rating: ANIME_RATING_PG_13;
+  //    Censored: false;
   //
   // The available values can be found in the function description: shiki.ValuesSchema();
   // The available interface parameters can be found in the function description: shiki.AnimeSchema();
-  schema, err := shiki.AnimeSchema(
+  schema := shiki.AnimeSchema(
     shiki.ValuesSchema("id", "name", "score", "episodes", "airedOn{year month day date}"),
-    "initial d", 1, 5, 8, "", shiki.ANIME_KIND_TV,
-    shiki.ANIME_STATUS_RELEASED, "", "", shiki.ANIME_RATING_PG_13, "", false, nil,
+    "initial d",
+    shiki.AnimeOptions{
+      Page: 1, Limit: 5, Score: 8, Kind: shiki.ANIME_KIND_TV,
+      Status: shiki.ANIME_STATUS_RELEASED, Rating: shiki.ANIME_RATING_PG_13,
+    },
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   a, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {
@@ -87,30 +81,25 @@ func main() {
   c := conf()
 
   // The first parameter is the values of the manga; values: "id", "name", "score", "volumes", "chapters", "releasedOn{year}".
-  // The second parameter is the name of the manga; name: "initial d".
-  // Now let's move on to the interface:
-  //    1) page: 1;
-  //    2) limit: 1;
-  //    3) score: 8;
-  //    4) order: ""; skipped;
-  //    5) kind: MANGA_KIND_MANGA;
-  //    6) status: MANGA_STATUS_RELEASED;
-  //    7) season: ""; skipped;
-  //    8) mylist: MY_LIST_COMPLETED;
-  //    9) censored: false;
-  //    10) genre: nil; skipped;
+  // The second parameter is the name of the manga; name: "liar game".
+  // The third parameter is the MangaOptions struct; the zero value of a field means the option is skipped:
+  //    Page: 1;
+  //    Limit: 1;
+  //    Score: 8;
+  //    Kind: MANGA_KIND_MANGA;
+  //    Status: MANGA_STATUS_RELEASED;
+  //    Mylist: MY_LIST_COMPLETED;
   //
   // The available values can be found in the function description: shiki.ValuesSchema();
   // The available interface parameters can be found in the function description: shiki.MangaSchema();
-  schema, err := shiki.MangaSchema(
+  schema := shiki.MangaSchema(
     shiki.ValuesSchema("id", "name", "score", "volumes", "chapters", "releasedOn{year}"),
-    "liar game", 1, 1, 8, "", shiki.MANGA_KIND_MANGA, shiki.MANGA_STATUS_RELEASED,
-    "", shiki.MY_LIST_COMPLETED, false, nil,
+    "liar game",
+    shiki.MangaOptions{
+      Page: 1, Limit: 1, Score: 8, Kind: shiki.MANGA_KIND_MANGA,
+      Status: shiki.MANGA_STATUS_RELEASED, Mylist: shiki.MY_LIST_COMPLETED,
+    },
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   m, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {
@@ -147,20 +136,17 @@ func main() {
 
   // The first parameter is the values of the character; values: "id", "name", "russian", "url", "description".
   // The second parameter is the name of the character; name: "onizuka".
-  // Now let's move on to the interface:
-  //    1) page: 1;
-  //    2) limit: 2;
+  // The third parameter is the CharacterOptions struct; the zero value of a field means the option is skipped:
+  //    Page: 1;
+  //    Limit: 2;
   //
   // The available values can be found in the function description: shiki.ValuesSchema();
   // The available interface parameters can be found in the function description: shiki.CharacterSchema();
-  schema, err := shiki.CharacterSchema(
+  schema := shiki.CharacterSchema(
     shiki.ValuesSchema("id", "name", "russian", "url", "description"),
-    "onizuka", 1, 2,
+    "onizuka",
+    shiki.CharacterOptions{Page: 1, Limit: 2},
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   ch, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {
@@ -198,23 +184,20 @@ func main() {
   // The first parameter is the values of the people; values: "id", "name", "russian", "url",
   // "website", "birthOn{year month day date}".
   // The second parameter is the name of the people; name: "satsuki".
-  // Now let's move on to the interface:
-  //    1) page: 1;
-  //    2) limit: 2;
-  //    3) isSeyu: true;
-  //    4) isMangaka: false;
-  //    5) isProducer: false;
+  // The third parameter is the PeopleOptions struct:
+  //    Page: 1;
+  //    Limit: 1;
+  //    IsSeyu: true;
+  //    IsMangaka: false;
+  //    IsProducer: false;
   //
   // The available values can be found in the function description: shiki.ValuesSchema();
   // The available interface parameters can be found in the function description: shiki.PeopleSchema();
-  schema, err := shiki.PeopleSchema(
+  schema := shiki.PeopleSchema(
     shiki.ValuesSchema("id", "name", "russian", "url", "website", "birthOn{year month day date}"),
-    "satsuki", 1, 1, true, false, false,
+    "satsuki",
+    shiki.PeopleOptions{Page: 1, Limit: 1, IsSeyu: true},
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   p, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {
@@ -255,25 +238,24 @@ func main() {
   // The first parameter is the values of the userRates; values: "id",
   // "text", "score", "createdAt", "anime{id name}",
   // The second parameter is the user Id; userId: 181833.
-  // In the third parameter, we introduce an auxiliary function that
-  // will separate the two additional fields: "order: {field: id, order: desc}".
-  // Now let's move on to the interface:
-  //    1) page: 1;
-  //    2) limit: 2;
-  //    3) status: completed;
-  //    4) targetType: Anime;
+  // The third parameter is the UserRatesOptions struct; the zero value of a field means the option is skipped:
+  //    Page: 1;
+  //    Limit: 10;
+  //    Status: MY_LIST_COMPLETED;
+  //    TargetType: TARGET_TYPE_ANIME;
+  //    Order: UserRatesOrder() - an auxiliary function that adds "order: {field: id, order: desc}".
   //
   // The available values can be found in the function description: shiki.ValuesSchema();
   // The available interface parameters can be found in the function description: shiki.UserRatesSchema();
-  schema, err := shiki.UserRatesSchema(
+  schema := shiki.UserRatesSchema(
     shiki.ValuesSchema("id", "text", "score", "createdAt", "anime{id name}"),
-    181833, graph.UserRatesOrder(shiki.GRAPHQL_ORDER_FIELD_ID, shiki.GRAPHQL_ORDER_ORDER_DESC),
-    1, 10, shiki.MY_LIST_COMPLETED, shiki.TARGET_TYPE_ANIME,
+    181833,
+    shiki.UserRatesOptions{
+      Page: 1, Limit: 10, Status: shiki.MY_LIST_COMPLETED,
+      TargetType: shiki.TARGET_TYPE_ANIME,
+      Order: shiki.UserRatesOrder(shiki.GRAPHQL_ORDER_FIELD_ID, shiki.GRAPHQL_ORDER_ORDER_DESC),
+    },
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   ur, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {

@@ -25,31 +25,26 @@ func main() {
   // Первым параметром идет перечисление значений которые мы хотим получить
   // от сервера; values: "id", "name", "score", "episodes", "airedOn{year month day date}".
   // Вторым параметром идет название аниме; name: "initial d".
-  // Теперь переходим к интерфейсу:
-  //    1)  page: 1;
-  //    2)  limit: 5;
-  //    3)  score: 8;
-  //    4)  order: ""; пропустил;
-  //    5)  kind: ANIME_KIND_TV;
-  //    6)  status: ANIME_STATUS_RELEASED;
-  //    7)  season: ""; пропустил;
-  //    8)  duration: ""; пропустил;
-  //    9)  rating: ANIME_RATING_PG_13;
-  //    10) mylist: ""; пропустил;
-  //    11) censored: false;
-  //    12) genre: nil; пропустил;
+  // Третьим параметром идет структура AnimeOptions; нулевое значение поля означает,
+  // что параметр пропускается:
+  //    Page: 1;
+  //    Limit: 5;
+  //    Score: 8;
+  //    Kind: ANIME_KIND_TV;
+  //    Status: ANIME_STATUS_RELEASED;
+  //    Rating: ANIME_RATING_PG_13;
+  //    Censored: false;
   //
   // Про доступные значения можно почитать в описании функции: shiki.ValuesSchema();
   // Про доступные параметры интерфейса можно почитать в описании функции: shiki.AnimeSchema();
-  schema, err := shiki.AnimeSchema(
+  schema := shiki.AnimeSchema(
     shiki.ValuesSchema("id", "name", "score", "episodes", "airedOn{year month day date}"),
-    "initial d", 1, 5, 8, "", shiki.ANIME_KIND_TV,
-    shiki.ANIME_STATUS_RELEASED, "", "", shiki.ANIME_RATING_PG_13, "", false, nil,
+    "initial d",
+    shiki.AnimeOptions{
+      Page: 1, Limit: 5, Score: 8, Kind: shiki.ANIME_KIND_TV,
+      Status: shiki.ANIME_STATUS_RELEASED, Rating: shiki.ANIME_RATING_PG_13,
+    },
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   a, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {
@@ -89,30 +84,26 @@ func main() {
 
   // Первым параметром идет перечисление значений которые мы хотим получить
   // от сервера; values: "id", "name", "score", "volumes", "chapters", "releasedOn{year}".
-  // Вторым параметром идет название манги; name: "initial d".
-  // Теперь переходим к интерфейсу:
-  //    1) page: 1;
-  //    2) limit: 1;
-  //    3) score: 8;
-  //    4) order: ""; пропустил;
-  //    5) kind: MANGA_KIND_MANGA;
-  //    6) status: MANGA_STATUS_RELEASED;
-  //    7) season: ""; пропустил;
-  //    8) mylist: MY_LIST_COMPLETED;
-  //    9) censored: false;
-  //    10) genre: nil; пропустил;
+  // Вторым параметром идет название манги; name: "liar game".
+  // Третьим параметром идет структура MangaOptions; нулевое значение поля означает,
+  // что параметр пропускается:
+  //    Page: 1;
+  //    Limit: 1;
+  //    Score: 8;
+  //    Kind: MANGA_KIND_MANGA;
+  //    Status: MANGA_STATUS_RELEASED;
+  //    Mylist: MY_LIST_COMPLETED;
   //
   // Про доступные значения можно почитать в описании функции: shiki.ValuesSchema();
   // Про доступные параметры интерфейса можно почитать в описании функции: shiki.MangaSchema();
-  schema, err := shiki.MangaSchema(
+  schema := shiki.MangaSchema(
     shiki.ValuesSchema("id", "name", "score", "volumes", "chapters", "releasedOn{year}"),
-    "liar game", 1, 1, 8, "", shiki.MANGA_KIND_MANGA, shiki.MANGA_STATUS_RELEASED,
-    "", shiki.MY_LIST_COMPLETED, false, nil,
+    "liar game",
+    shiki.MangaOptions{
+      Page: 1, Limit: 1, Score: 8, Kind: shiki.MANGA_KIND_MANGA,
+      Status: shiki.MANGA_STATUS_RELEASED, Mylist: shiki.MY_LIST_COMPLETED,
+    },
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   m, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {
@@ -150,20 +141,18 @@ func main() {
   // Первым параметром идет перечисление значений которые мы хотим получить
   // от сервера; values: "id", "name", "russian", "url", "description"".
   // Вторым параметром идет название персонажа; name: "onizuka".
-  // Теперь переходим к интерфейсу:
-  //    1) page: 1;
-  //    2) limit: 2;
+  // Третьим параметром идет структура CharacterOptions; нулевое значение поля
+  // означает, что параметр пропускается:
+  //    Page: 1;
+  //    Limit: 2;
   //
   // Про доступные значения можно почитать в описании функции: shiki.ValuesSchema();
   // Про доступные параметры интерфейса можно почитать в описании функции: shiki.CharacterSchema();
-  schema, err := shiki.CharacterSchema(
+  schema := shiki.CharacterSchema(
     shiki.ValuesSchema("id", "name", "russian", "url", "description"),
-    "onizuka", 1, 2,
+    "onizuka",
+    shiki.CharacterOptions{Page: 1, Limit: 2},
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   ch, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {
@@ -203,21 +192,18 @@ func main() {
   // Вторым параметром идет имя человека; name: "satsuki".
   // Теперь переходим к интерфейсу:
   //    1) page: 1;
-  //    2) limit: 2;
+  //    2) limit: 1;
   //    3) isSeyu: true;
   //    4) isMangaka: false;
   //    5) isProducer: false;
   //
   // Про доступные значения можно почитать в описании функции: shiki.ValuesSchema();
   // Про доступные параметры интерфейса можно почитать в описании функции: shiki.PeopleSchema();
-  schema, err := shiki.PeopleSchema(
+  schema := shiki.PeopleSchema(
     shiki.ValuesSchema("id", "name", "russian", "url", "website", "birthOn{year month day date}"),
-    "satsuki", 1, 1, true, false, false,
+    "satsuki",
+    shiki.PeopleOptions{Page: 1, Limit: 1, IsSeyu: true},
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   p, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {
@@ -258,25 +244,26 @@ func main() {
   // Первым параметром идет перечисление значений которые мы хотим получить
   // от сервера; values: "id", "text", "score", "createdAt", "anime{id name}".
   // Вторым параметром идет id пользователя; userId: 181833.
-  // Третьим параметром заводим вспомогательную функцию, которая разобьет два
-  // дополнительных поля: "order: {field: id, order: desc}".
-  // Теперь переходим к интерфейсу:
-  //    1) page: 1;
-  //    2) limit: 2;
-  //    3) status: completed;
-  //    4) targetType: Anime;
+  // Третьим параметром идет структура UserRatesOptions; нулевое значение поля
+  // означает, что параметр пропускается:
+  //    Page: 1;
+  //    Limit: 10;
+  //    Status: MY_LIST_COMPLETED;
+  //    TargetType: TARGET_TYPE_ANIME;
+  //    Order: UserRatesOrder() - вспомогательная функция, которая разобьет два
+  //           дополнительных поля: "order: {field: id, order: desc}".
   //
   // Про доступные значения можно почитать в описании функции: shiki.ValuesSchema();
   // Про доступные параметры интерфейса можно почитать в описании функции: shiki.UserRatesSchema();
-  schema, err := shiki.UserRatesSchema(
+  schema := shiki.UserRatesSchema(
     shiki.ValuesSchema("id", "text", "score", "createdAt", "anime{id name}"),
-    181833, graph.UserRatesOrder(shiki.GRAPHQL_ORDER_FIELD_ID, shiki.GRAPHQL_ORDER_ORDER_DESC),
-    1, 10, shiki.MY_LIST_COMPLETED, shiki.TARGET_TYPE_ANIME,
+    181833,
+    shiki.UserRatesOptions{
+      Page: 1, Limit: 10, Status: shiki.MY_LIST_COMPLETED,
+      TargetType: shiki.TARGET_TYPE_ANIME,
+      Order: shiki.UserRatesOrder(shiki.GRAPHQL_ORDER_FIELD_ID, shiki.GRAPHQL_ORDER_ORDER_DESC),
+    },
   )
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
 
   ur, status, err := c.SearchGraphql(schema)
   if status != 200 || err != nil {

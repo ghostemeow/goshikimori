@@ -20,10 +20,15 @@ type StatusBar struct {
 func (s *StatusBar) Settings(length int, symbol string, wait time.Duration) {
 	s.Total = length
 	s.Graph = symbol
-	s.Wait  = wait
+	s.Wait = wait
 }
 
 func (s *StatusBar) Run() {
+	if s.Total <= 0 {
+		fmt.Println("StatusBar: Total is not set")
+		return
+	}
+
 	fmt.Printf("Too many requests at once, waiting %d seconds...\n", s.Total)
 
 	for i := 0; i <= s.Total; i++ {

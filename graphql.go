@@ -2,12 +2,11 @@ package goshikimori
 
 import (
 	"bytes"
-	"errors"
 	"strconv"
 	"strings"
 
-	"github.com/ghostemeow/goshikimori/internal/concatination"
 	"github.com/ghostemeow/goshikimori/genres"
+	"github.com/ghostemeow/goshikimori/internal/concatenation"
 )
 
 // Available anime options:
@@ -73,6 +72,70 @@ func ValuesSchema(input ...string) string {
 	return res.String()
 }
 
+// AnimeOptions are the options for AnimeSchema.
+//
+// The zero value of a field means the option is skipped (except Censored,
+// which is always written).
+type AnimeOptions struct {
+	Page     int
+	Limit    int
+	Score    int
+	Order    string
+	Kind     string
+	Status   string
+	Season   string
+	Duration string
+	Rating   string
+	Mylist   string
+	Censored bool
+	GenreV2  []int
+}
+
+// MangaOptions are the options for MangaSchema.
+//
+// The zero value of a field means the option is skipped (except Censored,
+// which is always written).
+type MangaOptions struct {
+	Page     int
+	Limit    int
+	Score    int
+	Order    string
+	Kind     string
+	Status   string
+	Season   string
+	Mylist   string
+	Censored bool
+	GenreV2  []int
+}
+
+// CharacterOptions are the options for CharacterSchema.
+//
+// The zero value of a field means the option is skipped.
+type CharacterOptions struct {
+	Page  int
+	Limit int
+}
+
+// PeopleOptions are the options for PeopleSchema.
+type PeopleOptions struct {
+	Page       int
+	Limit      int
+	IsSeyu     bool
+	IsMangaka  bool
+	IsProducer bool
+}
+
+// UserRatesOptions are the options for UserRatesSchema.
+//
+// The zero value of a field means the option is skipped.
+type UserRatesOptions struct {
+	Page       int
+	Limit      int
+	Status     string
+	TargetType string
+	Order      string
+}
+
 // Values: parameters we want to receive from the server.
 //
 // Name: anime name.
@@ -80,6 +143,9 @@ func ValuesSchema(input ...string) string {
 // If you use the 'order' parameter, you don't need to enter the name of the anime.
 //
 // Exclamation mark(!) indicates ignore.
+//
+// Options: an AnimeOptions struct. The zero value of a field means the option is skipped
+// (except Censored, which is always written).
 //
 // 'Options' settings:
 //
@@ -152,102 +218,69 @@ func ValuesSchema(input ...string) string {
 // How to use and all the information you need [here].
 //
 // [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
-func AnimeSchema(values string, name string, options ...any) (string, error) {
+func AnimeSchema(values string, name string, options AnimeOptions) string {
 	var parameterOptions bytes.Buffer
 
-	for i, option := range options {
-		switch i {
-		case 0:
-			page, ok := option.(int)
-			if ok && page >= 1 {
-				parameterOptions.WriteString(", page: ")
-				parameterOptions.WriteString(strconv.Itoa(page))
-			}
-		case 1:
-			limit, ok := option.(int)
-			if ok && limit >= 1 && limit <= 50 {
-				parameterOptions.WriteString(", limit: ")
-				parameterOptions.WriteString(strconv.Itoa(limit))
-			}
-		case 2:
-			score, ok := option.(int)
-			if ok && score >= 1 && score <= 9 {
-				parameterOptions.WriteString(", score: ")
-				parameterOptions.WriteString(strconv.Itoa(score))
-			}
-		case 3:
-			order, ok := option.(string)
-			if ok && order != "" {
-				parameterOptions.WriteString(", order: ")
-				parameterOptions.WriteString(order)
-			}
-		case 4:
-			kind, ok := option.(string)
-			if ok && kind != "" {
-				parameterOptions.WriteString(", kind: \"")
-				parameterOptions.WriteString(kind)
-				parameterOptions.WriteString("\"")
-			}
-		case 5:
-			status, ok := option.(string)
-			if ok && status != "" {
-				parameterOptions.WriteString(", status: \"")
-				parameterOptions.WriteString(status)
-				parameterOptions.WriteString("\"")
-			}
-		case 6:
-			season, ok := option.(string)
-			if ok && season != "" {
-				parameterOptions.WriteString(", season: \"")
-				parameterOptions.WriteString(season)
-				parameterOptions.WriteString("\"")
-			}
-		case 7:
-			duration, ok := option.(string)
-			if ok && duration != "" {
-				parameterOptions.WriteString(", duration: \"")
-				parameterOptions.WriteString(duration)
-				parameterOptions.WriteString("\"")
-			}
-		case 8:
-			rating, ok := option.(string)
-			if ok && rating != "" {
-				parameterOptions.WriteString(", rating: \"")
-				parameterOptions.WriteString(rating)
-				parameterOptions.WriteString("\"")
-			}
-		case 9:
-			mylist, ok := option.(string)
-			if ok && mylist != "" {
-				parameterOptions.WriteString(", mylist: \"")
-				parameterOptions.WriteString(mylist)
-				parameterOptions.WriteString("\"")
-			}
-		case 10:
-			censored, ok := option.(bool)
-			if ok {
-				parameterOptions.WriteString(", censored: ")
-				parameterOptions.WriteString(strconv.FormatBool(censored))
-			}
-		case 11:
-			genres_v2, ok_genre_v2 := option.([]int)
-			genre := genres.MapGenresAnime(genres_v2)
-			if ok_genre_v2 && genre != "" {
-				parameterOptions.WriteString(", genre: \"")
-				parameterOptions.WriteString(genre)
-				parameterOptions.WriteString("\"")
-			}
-		default:
-			return "", errors.New("one of the parameters is entered incorrectly, check sequence or spelling errors")
-		}
+	if options.Page >= 1 {
+		parameterOptions.WriteString(", page: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Page))
+	}
+	if options.Limit >= 1 && options.Limit <= 50 {
+		parameterOptions.WriteString(", limit: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Limit))
+	}
+	if options.Score >= 1 && options.Score <= 9 {
+		parameterOptions.WriteString(", score: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Score))
+	}
+	if options.Order != "" {
+		parameterOptions.WriteString(", order: ")
+		parameterOptions.WriteString(options.Order)
+	}
+	if options.Kind != "" {
+		parameterOptions.WriteString(", kind: \"")
+		parameterOptions.WriteString(options.Kind)
+		parameterOptions.WriteString("\"")
+	}
+	if options.Status != "" {
+		parameterOptions.WriteString(", status: \"")
+		parameterOptions.WriteString(options.Status)
+		parameterOptions.WriteString("\"")
+	}
+	if options.Season != "" {
+		parameterOptions.WriteString(", season: \"")
+		parameterOptions.WriteString(options.Season)
+		parameterOptions.WriteString("\"")
+	}
+	if options.Duration != "" {
+		parameterOptions.WriteString(", duration: \"")
+		parameterOptions.WriteString(options.Duration)
+		parameterOptions.WriteString("\"")
+	}
+	if options.Rating != "" {
+		parameterOptions.WriteString(", rating: \"")
+		parameterOptions.WriteString(options.Rating)
+		parameterOptions.WriteString("\"")
+	}
+	if options.Mylist != "" {
+		parameterOptions.WriteString(", mylist: \"")
+		parameterOptions.WriteString(options.Mylist)
+		parameterOptions.WriteString("\"")
+	}
+	parameterOptions.WriteString(", censored: ")
+	parameterOptions.WriteString(strconv.FormatBool(options.Censored))
+	if genre := genres.MapGenresAnime(options.GenreV2); genre != "" {
+		parameterOptions.WriteString(", genre: \"")
+		parameterOptions.WriteString(genre)
+		parameterOptions.WriteString("\"")
 	}
 
-	// 36(graphql?query={animes(search: " "){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concatination.Url(36+len(name)+len(parameterOptions.String())+len(values), []string{
-		"graphql?query={animes(search: \"", name, "\"",
+	// 22({animes(search: " "){}}) + ?(name) + ?(parameterOptions) + ?(values)
+	return concatenation.Url(22+len(name)+len(parameterOptions.String())+len(values), []string{
+		"{animes(search: \"", name, "\"",
 		parameterOptions.String(), ")",
 		"{", values, "}}",
-	}), nil
+	})
 }
 
 // Values: parameters we want to receive from the server.
@@ -257,6 +290,9 @@ func AnimeSchema(values string, name string, options ...any) (string, error) {
 // If you use the 'order' parameter, you don't need to enter the name of the anime.
 //
 // Exclamation mark(!) indicates ignore.
+//
+// Options: an MangaOptions struct. The zero value of a field means the option is skipped
+// (except Censored, which is always written).
 //
 // 'Options' settings:
 //
@@ -314,93 +350,66 @@ func AnimeSchema(values string, name string, options ...any) (string, error) {
 // How to use and all the information you need [here].
 //
 // [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
-func MangaSchema(values string, name string, options ...any) (string, error) {
+func MangaSchema(values string, name string, options MangaOptions) string {
 	var parameterOptions bytes.Buffer
 
-	for i, option := range options {
-		switch i {
-		case 0:
-			page, ok := option.(int)
-			if ok && page >= 1 {
-				parameterOptions.WriteString(", page: ")
-				parameterOptions.WriteString(strconv.Itoa(page))
-			}
-		case 1:
-			limit, ok := option.(int)
-			if ok && limit >= 1 && limit <= 50 {
-				parameterOptions.WriteString(", limit: ")
-				parameterOptions.WriteString(strconv.Itoa(limit))
-			}
-		case 2:
-			score, ok := option.(int)
-			if ok && score >= 1 && score <= 9 {
-				parameterOptions.WriteString(", score: ")
-				parameterOptions.WriteString(strconv.Itoa(score))
-			}
-		case 3:
-			order, ok := option.(string)
-			if ok && order != "" {
-				parameterOptions.WriteString(", order: ")
-				parameterOptions.WriteString(order)
-			}
-		case 4:
-			kind, ok := option.(string)
-			if ok && kind != "" {
-				parameterOptions.WriteString(", kind: \"")
-				parameterOptions.WriteString(kind)
-				parameterOptions.WriteString("\"")
-			}
-		case 5:
-			status, ok := option.(string)
-			if ok && status != "" {
-				parameterOptions.WriteString(", status: \"")
-				parameterOptions.WriteString(status)
-				parameterOptions.WriteString("\"")
-			}
-		case 6:
-			season, ok := option.(string)
-			if ok && season != "" {
-				parameterOptions.WriteString(", season: \"")
-				parameterOptions.WriteString(season)
-				parameterOptions.WriteString("\"")
-			}
-		case 7:
-			mylist, ok := option.(string)
-			if ok && mylist != "" {
-				parameterOptions.WriteString(", mylist: \"")
-				parameterOptions.WriteString(mylist)
-				parameterOptions.WriteString("\"")
-			}
-		case 8:
-			censored, ok := option.(bool)
-			if ok {
-				parameterOptions.WriteString(", censored: ")
-				parameterOptions.WriteString(strconv.FormatBool(censored))
-			}
-		case 9:
-			genres_v2, ok_genre_v2 := option.([]int)
-			genre := genres.MapGenresManga(genres_v2)
-			if ok_genre_v2 && genre != "" {
-				parameterOptions.WriteString(", genre: \"")
-				parameterOptions.WriteString(genre)
-				parameterOptions.WriteString("\"")
-			}
-		default:
-			return "", errors.New("one of the parameters is entered incorrectly, check sequence or spelling errors")
-		}
+	if options.Page >= 1 {
+		parameterOptions.WriteString(", page: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Page))
+	}
+	if options.Limit >= 1 && options.Limit <= 50 {
+		parameterOptions.WriteString(", limit: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Limit))
+	}
+	if options.Score >= 1 && options.Score <= 9 {
+		parameterOptions.WriteString(", score: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Score))
+	}
+	if options.Order != "" {
+		parameterOptions.WriteString(", order: ")
+		parameterOptions.WriteString(options.Order)
+	}
+	if options.Kind != "" {
+		parameterOptions.WriteString(", kind: \"")
+		parameterOptions.WriteString(options.Kind)
+		parameterOptions.WriteString("\"")
+	}
+	if options.Status != "" {
+		parameterOptions.WriteString(", status: \"")
+		parameterOptions.WriteString(options.Status)
+		parameterOptions.WriteString("\"")
+	}
+	if options.Season != "" {
+		parameterOptions.WriteString(", season: \"")
+		parameterOptions.WriteString(options.Season)
+		parameterOptions.WriteString("\"")
+	}
+	if options.Mylist != "" {
+		parameterOptions.WriteString(", mylist: \"")
+		parameterOptions.WriteString(options.Mylist)
+		parameterOptions.WriteString("\"")
+	}
+	parameterOptions.WriteString(", censored: ")
+	parameterOptions.WriteString(strconv.FormatBool(options.Censored))
+	if genre := genres.MapGenresManga(options.GenreV2); genre != "" {
+		parameterOptions.WriteString(", genre: \"")
+		parameterOptions.WriteString(genre)
+		parameterOptions.WriteString("\"")
 	}
 
-	// 36(graphql?query={mangas(search: " "){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concatination.Url(36+len(name)+len(parameterOptions.String())+len(values), []string{
-		"graphql?query={mangas(search: \"", name, "\"",
+	// 22({mangas(search: " "){}}) + ?(name) + ?(parameterOptions) + ?(values)
+	return concatenation.Url(22+len(name)+len(parameterOptions.String())+len(values), []string{
+		"{mangas(search: \"", name, "\"",
 		parameterOptions.String(), ")",
 		"{", values, "}}",
-	}), nil
+	})
 }
 
 // Values: parameters we want to receive from the server.
 //
 // Name: character name.
+//
+// Options: a CharacterOptions struct. The zero value of a field means the option is skipped.
 //
 // 'Options' settings:
 //   - Page: >= 1;
@@ -409,39 +418,31 @@ func MangaSchema(values string, name string, options ...any) (string, error) {
 // How to use and all the information you need [here].
 //
 // [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
-func CharacterSchema(values string, name string, options ...any) (string, error) {
+func CharacterSchema(values string, name string, options CharacterOptions) string {
 	var parameterOptions bytes.Buffer
 
-	for i, option := range options {
-		switch i {
-		case 0:
-			page, ok := option.(int)
-			if ok && page >= 1 {
-				parameterOptions.WriteString(", page: ")
-				parameterOptions.WriteString(strconv.Itoa(page))
-			}
-		case 1:
-			limit, ok := option.(int)
-			if ok && limit >= 1 && limit <= 50 {
-				parameterOptions.WriteString(", limit: ")
-				parameterOptions.WriteString(strconv.Itoa(limit))
-			}
-		default:
-			return "", errors.New("one of the parameters is entered incorrectly, check sequence or spelling errors")
-		}
+	if options.Page >= 1 {
+		parameterOptions.WriteString(", page: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Page))
+	}
+	if options.Limit >= 1 && options.Limit <= 50 {
+		parameterOptions.WriteString(", limit: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Limit))
 	}
 
-	// 40(graphql?query={characters(search: " "){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concatination.Url(40+len(name)+len(parameterOptions.String())+len(values), []string{
-		"graphql?query={characters(search: \"", name, "\"",
+	// 26({characters(search: " "){}}) + ?(name) + ?(parameterOptions) + ?(values)
+	return concatenation.Url(26+len(name)+len(parameterOptions.String())+len(values), []string{
+		"{characters(search: \"", name, "\"",
 		parameterOptions.String(), ")",
 		"{", values, "}}",
-	}), nil
+	})
 }
 
 // Values: parameters we want to receive from the server.
 //
 // Name: people name.
+//
+// Options: a PeopleOptions struct. The zero value of a field means the option is skipped.
 //
 // 'Options' settings:
 //   - Page: >= 1;
@@ -453,52 +454,30 @@ func CharacterSchema(values string, name string, options ...any) (string, error)
 // How to use and all the information you need [here].
 //
 // [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
-func PeopleSchema(values string, name string, options ...any) (string, error) {
+func PeopleSchema(values string, name string, options PeopleOptions) string {
 	var parameterOptions bytes.Buffer
 
-	for i, option := range options {
-		switch i {
-		case 0:
-			page, ok := option.(int)
-			if ok && page >= 1 {
-				parameterOptions.WriteString(", page: ")
-				parameterOptions.WriteString(strconv.Itoa(page))
-			}
-		case 1:
-			limit, ok := option.(int)
-			if ok && limit >= 1 && limit <= 50 {
-				parameterOptions.WriteString(", limit: ")
-				parameterOptions.WriteString(strconv.Itoa(limit))
-			}
-		case 2:
-			seyu, ok := option.(bool)
-			if ok {
-				parameterOptions.WriteString(", isSeyu: ")
-				parameterOptions.WriteString(strconv.FormatBool(seyu))
-			}
-		case 3:
-			mangaka, ok := option.(bool)
-			if ok {
-				parameterOptions.WriteString(", isMangaka: ")
-				parameterOptions.WriteString(strconv.FormatBool(mangaka))
-			}
-		case 4:
-			producer, ok := option.(bool)
-			if ok {
-				parameterOptions.WriteString(", isProducer: ")
-				parameterOptions.WriteString(strconv.FormatBool(producer))
-			}
-		default:
-			return "", errors.New("one of the parameters is entered incorrectly, check sequence or spelling errors")
-		}
+	if options.Page >= 1 {
+		parameterOptions.WriteString(", page: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Page))
 	}
+	if options.Limit >= 1 && options.Limit <= 50 {
+		parameterOptions.WriteString(", limit: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Limit))
+	}
+	parameterOptions.WriteString(", isSeyu: ")
+	parameterOptions.WriteString(strconv.FormatBool(options.IsSeyu))
+	parameterOptions.WriteString(", isMangaka: ")
+	parameterOptions.WriteString(strconv.FormatBool(options.IsMangaka))
+	parameterOptions.WriteString(", isProducer: ")
+	parameterOptions.WriteString(strconv.FormatBool(options.IsProducer))
 
-	// 36(graphql?query={people(search: " "){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concatination.Url(36+len(name)+len(parameterOptions.String())+len(values), []string{
-		"graphql?query={people(search: \"", name, "\"",
+	// 22({people(search: " "){}}) + ?(name) + ?(parameterOptions) + ?(values)
+	return concatenation.Url(22+len(name)+len(parameterOptions.String())+len(values), []string{
+		"{people(search: \"", name, "\"",
 		parameterOptions.String(), ")",
 		"{", values, "}}",
-	}), nil
+	})
 }
 
 // Auxiliary function for UserRatesSchema().
@@ -540,7 +519,7 @@ func UserRatesOrder(field, order string) string {
 //
 // UserId: user id.
 //
-// Order: string(can be blank to skip this option);
+// Options: an UserRatesOptions struct. The zero value of a field means the option is skipped.
 //
 // 'Options' settings:
 //
@@ -560,52 +539,37 @@ func UserRatesOrder(field, order string) string {
 // How to use and all the information you need [here].
 //
 // [here]: https://github.com/ghostemeow/goshikimori/blob/master/examples/GraphQL.md
-func UserRatesSchema(values string, userId int, order string, options ...any) (string, error) {
+func UserRatesSchema(values string, userId int, options UserRatesOptions) string {
 	var parameterOptions bytes.Buffer
 
 	id := strconv.Itoa(userId)
 
-	for i, option := range options {
-		switch i {
-		case 0:
-			page, ok := option.(int)
-			if ok && page >= 1 {
-				parameterOptions.WriteString(", page: ")
-				parameterOptions.WriteString(strconv.Itoa(page))
-			}
-		case 1:
-			limit, ok := option.(int)
-			if ok && limit >= 1 && limit <= 50 {
-				parameterOptions.WriteString(", limit: ")
-				parameterOptions.WriteString(strconv.Itoa(limit))
-			}
-		case 2:
-			status, ok := option.(string)
-			if ok && status != "" {
-				parameterOptions.WriteString(", status: ")
-				parameterOptions.WriteString(status)
-			}
-		case 3:
-			targetType, ok := option.(string)
-			if ok && targetType != "" {
-				parameterOptions.WriteString(", targetType: ")
-				parameterOptions.WriteString(targetType)
-			}
-		default:
-			return "", errors.New("one of the parameters is entered incorrectly, check sequence or spelling errors")
-		}
+	if options.Page >= 1 {
+		parameterOptions.WriteString(", page: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Page))
+	}
+	if options.Limit >= 1 && options.Limit <= 50 {
+		parameterOptions.WriteString(", limit: ")
+		parameterOptions.WriteString(strconv.Itoa(options.Limit))
+	}
+	if options.Status != "" {
+		parameterOptions.WriteString(", status: ")
+		parameterOptions.WriteString(options.Status)
+	}
+	if options.TargetType != "" {
+		parameterOptions.WriteString(", targetType: ")
+		parameterOptions.WriteString(options.TargetType)
+	}
+	if options.Order != "" {
+		parameterOptions.WriteString(options.Order)
 	}
 
-	if order != "" {
-		parameterOptions.WriteString(order)
-	}
-
-	// 37(graphql?query={userRates(userId: ){}}) + ?(name) + ?(paramterOptions) + ?(value)
-	return concatination.Url(37+len(id)+len(parameterOptions.String())+len(values), []string{
-		"graphql?query={userRates(userId: ", id,
+	// 24({userRates(userId: 0){}}) + ?(id) + ?(parameterOptions) + ?(values)
+	return concatenation.Url(24+len(id)+len(parameterOptions.String())+len(values), []string{
+		"{userRates(userId: ", id,
 		parameterOptions.String(), ")",
 		"{", values, "}}",
-	}), nil
+	})
 }
 
 // TODO (ghostemeow): create query with variables.

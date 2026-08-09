@@ -1,4 +1,4 @@
-package concatination
+package concatenation
 
 import (
 	"bytes"
@@ -27,7 +27,17 @@ func NekoSliceToString(slice []string) string {
 }
 
 // Quick creation of a url.
+//
+// maxLen is only a hint for pre-allocation: if the actual length of the
+// joined parts exceeds it, the result is grown instead of truncated.
 func Url(maxLen int, slice []string) string {
+	total := 0
+	for _, s := range slice {
+		total += len(s)
+	}
+	if maxLen < total {
+		maxLen = total
+	}
 	var offset int
 	res := make([]byte, maxLen)
 	for i := range slice {
@@ -54,11 +64,21 @@ func DataBuffer(slice []string) []byte {
 }
 
 // Converting a slice to a []byte using a copy.
+//
+// maxLen is only a hint for pre-allocation: if the actual length of the
+// joined parts exceeds it, the result is grown instead of truncated.
 func DataCopy(maxLen int, slice []string) []byte {
+	total := 0
+	for _, s := range slice {
+		total += len(s)
+	}
+	if maxLen < total {
+		maxLen = total
+	}
 	var offset int
 	res := make([]byte, maxLen)
 	for i := range slice {
 		offset += copy(res[offset:], []byte(slice[i]))
 	}
-	return res
+	return res[:offset]
 }

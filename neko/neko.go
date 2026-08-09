@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/ghostemeow/goshikimori/internal/concatination"
+	"github.com/ghostemeow/goshikimori/internal/concatenation"
 )
 
 // String formatting for achievements search. Check [example].
@@ -16,5 +16,5 @@ func Search(name string) (string, error) {
 	if len(words) == 0 {
 		return "", errors.New("too short string")
 	}
-	return strings.ToLower(concatination.NekoSliceToString(words)), nil
+	return strings.ToLower(concatenation.NekoSliceToString(words)), nil
 }
