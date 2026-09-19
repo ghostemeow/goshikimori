@@ -737,3 +737,27 @@ func TestOptionsRandomRanobeV2(t *testing.T) {
 		t.Error("Normal OptionsRandomRanobeV2 failed")
 	}
 }
+
+func TestOptionsCommentsV2(t *testing.T) {
+	normal_one := Options{
+		Commentable_id:   270119,
+		Commentable_type: constants.COMMENTABLE_TYPE_TOPIC,
+		Page:             1, Limit: 10, Desc: true,
+	}
+	if normal_one.OptionsCommentsV2() == "commentable_id=270119&commentable_type=Topic&page=1&limit=10&desc=1" {
+		t.Log("Normal-one OptionsCommentsV2 passed")
+	} else {
+		t.Error("Normal-one OptionsCommentsV2 failed")
+	}
+
+	normal_two := Options{
+		Commentable_id:   23456821,
+		Commentable_type: constants.COMMENTABLE_TYPE_USER,
+		Page:             2, Limit: 30, Desc: false,
+	}
+	if normal_two.OptionsCommentsV2() == "commentable_id=23456821&commentable_type=User&page=2&limit=30&desc=0" {
+		t.Log("Normal-two OptionsCommentsV2 passed")
+	} else {
+		t.Error("Normal-two OptionsCommentsV2 failed")
+	}
+}

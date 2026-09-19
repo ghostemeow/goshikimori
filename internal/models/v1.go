@@ -825,6 +825,27 @@ type TopicNotice struct {
 	Notice string `json:"notice"`
 }
 
+// Comments list/show/create/update response,
+// the user object matches the UserFriends structure.
+type Comments struct {
+	Id               int         `json:"id"`
+	User_id          int         `json:"user_id"`
+	Commentable_id   int         `json:"commentable_id"`
+	Commentable_type string      `json:"commentable_type"`
+	Body             string      `json:"body"`
+	HTMLBody         string      `json:"html_body"`
+	Created_at       time.Time   `json:"created_at"`
+	Updated_at       time.Time   `json:"updated_at"`
+	Is_offtopic      bool        `json:"is_offtopic"`
+	Is_summary       bool        `json:"is_summary"`
+	Can_be_edited    bool        `json:"can_be_edited"`
+	User             UserFriends `json:"user"`
+}
+
+type CommentsNotice struct {
+	Notice string `json:"notice"`
+}
+
 type Character struct {
 	Id                int               `json:"id"`
 	Name              string            `json:"name"`

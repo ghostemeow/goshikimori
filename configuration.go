@@ -58,55 +58,59 @@ func SetConfiguration(appname, token string) *Configuration {
 }
 
 type Options struct {
-	Order       string
-	Kind        string
-	Status      string
-	Season      string
-	Rating      string
-	Type        string
-	Target_type string
-	Duration    string
-	Mylist      string
-	Forum       string
-	Linked_type string
-	Page        int
-	Limit       int
-	Score       int
-	Linked_id   int
-	Target_id   int
-	Genre_v2    []int
-	Censored    bool
+	Order            string
+	Kind             string
+	Status           string
+	Season           string
+	Rating           string
+	Type             string
+	Target_type      string
+	Duration         string
+	Mylist           string
+	Forum            string
+	Linked_type      string
+	Commentable_type string
+	Page             int
+	Limit            int
+	Score            int
+	Linked_id        int
+	Target_id        int
+	Commentable_id   int
+	Genre_v2         []int
+	Censored         bool
+	Desc             bool
 }
 
 type Result interface {
 	OptionsOnlyPageLimit(int, int) string
-	OptionsAnime()                 string
-	OptionsManga()                 string
-	OptionsRanobe()                string
-	OptionsCalendar()              string
-	OptionsAnimeRates()            string
-	OptionsMangaRates()            string
-	OptionsUserHistory()           string
-	OptionsMessages()              string
-	OptionsPeople()                string
-	OptionsTopics()                string
-	OptionsTopicsHot()             string
-	OptionsRandomAnime()           string
-	OptionsRandomManga()           string
-	OptionsRandomRanobe()          string
+	OptionsAnime() string
+	OptionsManga() string
+	OptionsRanobe() string
+	OptionsCalendar() string
+	OptionsAnimeRates() string
+	OptionsMangaRates() string
+	OptionsUserHistory() string
+	OptionsMessages() string
+	OptionsPeople() string
+	OptionsTopics() string
+	OptionsTopicsHot() string
+	OptionsRandomAnime() string
+	OptionsRandomManga() string
+	OptionsRandomRanobe() string
 
 	OptionsOnlyPageLimitV2() string
-	OptionsAnimeV2()         string
-	OptionsMangaV2()         string
-	OptionsRanobeV2()        string
-	OptionsCalendarV2()      string
-	OptionsAnimeRatesV2()    string
-	OptionsMangaRatesV2()    string
-	OptionsUserHistoryV2()   string
-	OptionsMessagesV2()      string
-	OptionsPeopleV2()        string
-	OptionsTopicsV2()        string
-	OptionsTopicsHotV2()     string
+	OptionsAnimeV2() string
+	OptionsMangaV2() string
+	OptionsRanobeV2() string
+	OptionsCalendarV2() string
+	OptionsAnimeRatesV2() string
+	OptionsMangaRatesV2() string
+	OptionsUserHistoryV2() string
+	OptionsMessagesV2() string
+	OptionsPeopleV2() string
+	OptionsTopicsV2() string
+	OptionsTopicsHotV2() string
+	OptionsCommentsV2() string
 }
 
 // Topic parameters for creating/updating a topic.
@@ -137,6 +141,35 @@ type TopicParams struct {
 	Title       string `json:"title,omitempty"`
 	Type        string `json:"type,omitempty"`
 	User_id     int    `json:"user_id,omitempty"`
+}
+
+// Comment parameters for creating/updating a comment.
+//
+// Required for [Configuration.CreateComment]:
+//
+//   - Body: comment text;
+//
+//   - Commentable_id: id of the commentable object;
+//
+//   - Commentable_type: one of the COMMENTABLE_TYPE_* constants,
+//     for the comment form the API expects one of:
+//
+//     > COMMENTABLE_TYPE_TOPIC, COMMENTABLE_TYPE_USER, COMMENTABLE_TYPE_ANIME, COMMENTABLE_TYPE_MANGA,
+//     COMMENTABLE_TYPE_CHARACTER, COMMENTABLE_TYPE_PERSON, COMMENTABLE_TYPE_ARTICLE,
+//     COMMENTABLE_TYPE_CLUB, COMMENTABLE_TYPE_CLUBPAGE, COMMENTABLE_TYPE_COLLECTION,
+//     COMMENTABLE_TYPE_CRITIQUE, COMMENTABLE_TYPE_REVIEW;
+//
+//     When set to Anime, Manga, Character, Person, Article, Club, ClubPage,
+//     Collection, Critique, Review, the comment is attached to the commentable main topic.
+//
+// Optional:
+//
+//   - Is_offtopic: mark the comment as offtopic.
+type CommentParams struct {
+	Body             string `json:"body,omitempty"`
+	Commentable_id   int    `json:"commentable_id,omitempty"`
+	Commentable_type string `json:"commentable_type,omitempty"`
+	Is_offtopic      bool   `json:"is_offtopic,string,omitempty"`
 }
 
 // TODO: (ghostemeow) abandon url.QueryEscape in the future.
@@ -719,6 +752,34 @@ func (o *Options) OptionsTopicsHotV2() string {
 
 	numBuf = strconv.AppendInt(numBuf[:0], int64(o.Limit), 10)
 	pairs = append(pairs, encodeParamEscaped("limit", string(numBuf)))
+
+	for i, p := range pairs {
+		if i > 0 {
+			sb.WriteByte('&')
+		}
+		sb.WriteString(p)
+	}
+
+	return sb.String()
+}
+
+func (o *Options) OptionsCommentsV2() string {
+	var numBuf []byte
+	var sb strings.Builder
+	pairs := make([]string, 0, 5)
+
+	numBuf = strconv.AppendInt(numBuf[:0], int64(o.Commentable_id), 10)
+	pairs = append(pairs, encodeParamEscaped("commentable_id", string(numBuf)))
+	pairs = append(pairs, encodeParamEscaped("commentable_type", o.Commentable_type))
+	numBuf = strconv.AppendInt(numBuf[:0], int64(o.Page), 10)
+	pairs = append(pairs, encodeParamEscaped("page", string(numBuf)))
+	numBuf = strconv.AppendInt(numBuf[:0], int64(o.Limit), 10)
+	pairs = append(pairs, encodeParamEscaped("limit", string(numBuf)))
+	if o.Desc {
+		pairs = append(pairs, encodeParamEscaped("desc", "1"))
+	} else {
+		pairs = append(pairs, encodeParamEscaped("desc", "0"))
+	}
 
 	for i, p := range pairs {
 		if i > 0 {

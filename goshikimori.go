@@ -3331,6 +3331,194 @@ func (c *Configuration) DeleteTopic(id int) (models.TopicNotice, int, error) {
 
 // Only the application needs to be specified in SetConfiguration().
 //
+// 'Options' settings:
+//
+//   - Commentable_id: required;
+//
+//   - Commentable_type:
+//
+//     > COMMENTABLE_TYPE_TOPIC, COMMENTABLE_TYPE_USER;
+//
+//   - Page: 100000 maximum;
+//
+//   - Limit: 30 maximum;
+//
+//   - Desc: true, false;
+//
+// More information can be found in the [example].
+//
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/comments
+func (c *Configuration) SearchComments(r Result) ([]models.Comments, int, error) {
+	var cm []models.Comments
+
+	opt := r.OptionsCommentsV2()
+
+	data, status, err := request.NewGetRequestWithCancel(
+		c.Application,
+		// 26(constants.SITE) + 9(comments?) + ?(Result)
+		concatenation.Url(35+len(opt), []string{constants.SITE, "comments?", opt}),
+		constants.MAX_EXPECTATION,
+	)
+	if err != nil {
+		return nil, status, err
+	}
+
+	if err := json.Unmarshal(data, &cm); err != nil {
+		return nil, status, err
+	}
+
+	return cm, status, nil
+}
+
+// Only the application needs to be specified in SetConfiguration().
+//
+// Id: comment id, can be found in SearchComments().
+//
+// More information can be found in the [example].
+//
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/comments
+func (c *Configuration) ReadComment(id int) (models.Comments, int, error) {
+	var cm models.Comments
+
+	str_id := strconv.Itoa(id)
+
+	data, status, err := request.NewGetRequestWithCancel(
+		c.Application,
+		// 26(constants.SITE) + 9(comments/) + ?(id)
+		concatenation.Url(35+len(str_id), []string{constants.SITE, "comments/", str_id}),
+		constants.MAX_EXPECTATION,
+	)
+	if err != nil {
+		return cm, status, err
+	}
+
+	if err := json.Unmarshal(data, &cm); err != nil {
+		return cm, status, err
+	}
+
+	return cm, status, nil
+}
+
+// In SetConfiguration(), you must specify the application and the token.
+//
+// Requires the 'comments' oauth scope.
+//
+// Comment: comment parameters, for the required/optional fields see [CommentParams].
+//
+// Broadcast: broadcast the comment in the club's topic, only club admins can do it.
+//
+// Returns a status of 201.
+//
+// More information can be found in the [example].
+//
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/comments
+func (c *Configuration) CreateComment(comment CommentParams, broadcast bool) (models.Comments, int, error) {
+	var cm models.Comments
+
+	body, err := json.Marshal(struct {
+		Broadcast bool          `json:"broadcast,string"`
+		Comment   CommentParams `json:"comment"`
+		Frontend  bool          `json:"frontend,string"`
+	}{Broadcast: broadcast, Comment: comment, Frontend: false})
+	if err != nil {
+		return cm, -1, err
+	}
+
+	data, status, err := request.NewCreateCommentPostRequestWithCancel(
+		c.Application, c.AccessToken,
+		// 26(constants.SITE) + 8(comments)
+		concatenation.Url(34, []string{constants.SITE, "comments"}),
+		body, constants.MAX_EXPECTATION,
+	)
+	if err != nil {
+		return cm, status, err
+	}
+
+	if err := json.Unmarshal(data, &cm); err != nil {
+		return cm, status, err
+	}
+
+	return cm, status, nil
+}
+
+// In SetConfiguration(), you must specify the application and the token.
+//
+// Requires the 'comments' oauth scope.
+//
+// Id: comment id, can be found in SearchComments().
+//
+// Comment: comment parameters, only the filled fields are updated.
+//
+// Returns a status of 200.
+//
+// More information can be found in the [example].
+//
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/comments
+func (c *Configuration) UpdateComment(id int, comment CommentParams) (models.Comments, int, error) {
+	var cm models.Comments
+
+	str_id := strconv.Itoa(id)
+
+	body, err := json.Marshal(struct {
+		Comment  CommentParams `json:"comment"`
+		Frontend bool          `json:"frontend,string"`
+	}{Comment: comment, Frontend: false})
+	if err != nil {
+		return cm, -1, err
+	}
+
+	data, status, err := request.NewUpdateCommentPatchRequestWithCancel(
+		c.Application, c.AccessToken,
+		// 26(constants.SITE) + 9(comments/) + ?(id)
+		concatenation.Url(35+len(str_id), []string{constants.SITE, "comments/", str_id}),
+		body, constants.MAX_EXPECTATION,
+	)
+	if err != nil {
+		return cm, status, err
+	}
+
+	if err := json.Unmarshal(data, &cm); err != nil {
+		return cm, status, err
+	}
+
+	return cm, status, nil
+}
+
+// In SetConfiguration(), you must specify the application and the token.
+//
+// Requires the 'comments' oauth scope.
+//
+// Id: comment id, can be found in SearchComments().
+//
+// Returns a status of 200.
+//
+// More information can be found in the [example].
+//
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/comments
+func (c *Configuration) DeleteComment(id int) (models.CommentsNotice, int, error) {
+	var cn models.CommentsNotice
+
+	str_id := strconv.Itoa(id)
+
+	data, status, err := request.NewDeleteRequestWithCancel(
+		c.Application, c.AccessToken,
+		// 26(constants.SITE) + 9(comments/) + ?(id)
+		concatenation.Url(35+len(str_id), []string{constants.SITE, "comments/", str_id}),
+		constants.MAX_EXPECTATION,
+	)
+	if err != nil {
+		return cn, status, err
+	}
+
+	if err := json.Unmarshal(data, &cn); err != nil {
+		return cn, status, err
+	}
+
+	return cn, status, nil
+}
+
+// Only the application needs to be specified in SetConfiguration().
+//
 // Query: customized request built by AnimeSchema or similar.
 //
 // How to use and all the information you need [here].

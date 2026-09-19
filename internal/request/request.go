@@ -354,3 +354,47 @@ func NewUpdateTopicPatchRequestWithCancel(application, accessToken, search strin
 
 	return data, status, nil
 }
+
+// Create comment: POST request. To work correctly with the POST method,
+// make sure that your application has the 'comments' oauth scope.
+func NewCreateCommentPostRequestWithCancel(application, accessToken, search string, body []byte, number time.Duration) ([]byte, int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), number)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, search, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, -1, err
+	}
+	req.Header.Add("User-Agent", application)
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
+	req.Header.Set("Content-Type", "application/json")
+
+	data, status, err := sendRequest(req)
+	if err != nil {
+		return nil, status, err
+	}
+
+	return data, status, nil
+}
+
+// Update comment: PATCH request. To work correctly with the PATCH method,
+// make sure that your application has the 'comments' oauth scope.
+func NewUpdateCommentPatchRequestWithCancel(application, accessToken, search string, body []byte, number time.Duration) ([]byte, int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), number)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, search, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, -1, err
+	}
+	req.Header.Add("User-Agent", application)
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
+	req.Header.Set("Content-Type", "application/json")
+
+	data, status, err := sendRequest(req)
+	if err != nil {
+		return nil, status, err
+	}
+
+	return data, status, nil
+}

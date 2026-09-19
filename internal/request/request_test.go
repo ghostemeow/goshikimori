@@ -477,3 +477,121 @@ func TestNewUpdateTopicPatchRequestWithCancel(t *testing.T) {
 		t.Errorf("invalid response body: %s", string(data))
 	}
 }
+
+func TestNewCreateCommentPostRequestWithCancel(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if header := r.Header.Get("User-Agent"); header != "test-app" {
+			t.Errorf("invalid User-Agent: %s", header)
+		}
+		if auth := r.Header.Get("Authorization"); !strings.HasPrefix(auth, "Bearer ") {
+			t.Errorf("missing/invalid Authorization: %s", auth)
+		}
+		if header := r.Header.Get("Content-Type"); header != "application/json" {
+			t.Errorf("invalid Content-Type: %s", header)
+		}
+		body, _ := io.ReadAll(r.Body)
+		var payload struct {
+			Broadcast string `json:"broadcast"`
+			Frontend  string `json:"frontend"`
+			Comment   struct {
+				Body            string `json:"body"`
+				CommentableID   int    `json:"commentable_id"`
+				CommentableType string `json:"commentable_type"`
+				IsOfftopic      string `json:"is_offtopic"`
+			} `json:"comment"`
+		}
+		if err := json.Unmarshal(body, &payload); err != nil {
+			t.Errorf("invalid json: %s", err.Error())
+		}
+		if payload.Broadcast != "false" {
+			t.Errorf("expected broadcast=false, got %s", payload.Broadcast)
+		}
+		if payload.Frontend != "false" {
+			t.Errorf("expected frontend=false, got %s", payload.Frontend)
+		}
+		if payload.Comment.Body != "xx" {
+			t.Errorf("wrong body: %s", payload.Comment.Body)
+		}
+		if payload.Comment.CommentableID != 270119 {
+			t.Errorf("expected commentable_id=270119, got %d", payload.Comment.CommentableID)
+		}
+		if payload.Comment.CommentableType != "Topic" {
+			t.Errorf("expected commentable_type=Topic, got %s", payload.Comment.CommentableType)
+		}
+		if payload.Comment.IsOfftopic != "true" {
+			t.Errorf("expected is_offtopic=true, got %s", payload.Comment.IsOfftopic)
+		}
+		w.WriteHeader(http.StatusCreated)
+		_, _ = w.Write([]byte(`{"id": 13, "body": "xx", "commentable_id": 270119, "commentable_type": "Topic"}`))
+	}))
+	defer server.Close()
+
+	data, status, err := NewCreateCommentPostRequestWithCancel(
+		"test-app", "test-token", server.URL,
+		[]byte(`{"broadcast":"false","comment":{"body":"xx","commentable_id":270119,"commentable_type":"Topic","is_offtopic":"true"},"frontend":"false"}`),
+		5*time.Second,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if status != 201 {
+		t.Errorf("expected 201, got %d", status)
+	}
+	if !strings.Contains(string(data), `"id": 13`) {
+		t.Errorf("invalid response body: %s", string(data))
+	}
+}
+
+func TestNewUpdateCommentPatchRequestWithCancel(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if header := r.Header.Get("User-Agent"); header != "test-app" {
+			t.Errorf("invalid User-Agent: %s", header)
+		}
+		if auth := r.Header.Get("Authorization"); !strings.HasPrefix(auth, "Bearer ") {
+			t.Errorf("missing/invalid Authorization: %s", auth)
+		}
+		if header := r.Header.Get("Content-Type"); header != "application/json" {
+			t.Errorf("invalid Content-Type: %s", header)
+		}
+		body, _ := io.ReadAll(r.Body)
+		var payload struct {
+			Frontend string `json:"frontend"`
+			Comment  struct {
+				Body string `json:"body"`
+			} `json:"comment"`
+		}
+		if err := json.Unmarshal(body, &payload); err != nil {
+			t.Errorf("invalid json: %s", err.Error())
+		}
+		if payload.Frontend != "false" {
+			t.Errorf("expected frontend=false, got %s", payload.Frontend)
+		}
+		if payload.Comment.Body != "blablabla" {
+			t.Errorf("wrong body: %s", payload.Comment.Body)
+		}
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"id": 12, "body": "blablabla"}`))
+	}))
+	defer server.Close()
+
+	data, status, err := NewUpdateCommentPatchRequestWithCancel(
+		"test-app", "test-token", server.URL,
+		[]byte(`{"comment":{"body":"blablabla"},"frontend":"false"}`),
+		5*time.Second,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if status != 200 {
+		t.Errorf("expected 200, got %d", status)
+	}
+	if !strings.Contains(string(data), `"id": 12`) {
+		t.Errorf("invalid response body: %s", string(data))
+	}
+}
