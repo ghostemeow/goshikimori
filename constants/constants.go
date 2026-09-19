@@ -36,6 +36,8 @@ const (
 	MY_LIST_ON_HOLD    = "on_hold"
 	MY_LIST_DROPPED    = "dropped"
 
+	TOPIC_TYPE = "Topic"
+
 	TOPIC_FORUM_ALL         = "all"
 	TOPIC_FORUM_COSPLAY     = "cosplay"
 	TOPIC_FORUM_ANIMANGA    = "animanga"

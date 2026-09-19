@@ -118,4 +118,45 @@ func main() {
 	if status == 200 {
 		fmt.Println(ignore.Is_ignored, ignore.Topic_id)
 	}
+
+	createUpdateDeleteTopic()
+}
+
+func createUpdateDeleteTopic() {
+	c := config()
+
+	me, status, err := c.WhoAmi()
+	if status != 200 || err != nil {
+		fmt.Println(status, err)
+		return
+	}
+
+	// Create a topic.
+	topic, status, err := c.CreateTopic(g.TopicParams{
+		Body:     "topic body",
+		Forum_id: 1,
+		Title:    "topic title",
+		User_id:  me.Id,
+	})
+	if status != 201 || err != nil {
+		fmt.Println(status, err)
+		return
+	}
+	fmt.Println(topic.Id, topic.Topic_title, topic.Body)
+
+	// Update the created topic.
+	update, status, err := c.UpdateTopic(topic.Id, g.TopicParams{Body: "new body"})
+	if status != 200 || err != nil {
+		fmt.Println(status, err)
+		return
+	}
+	fmt.Println(update.Id, update.Body)
+
+	// Delete the created topic.
+	delete_topic, status, err := c.DeleteTopic(topic.Id)
+	if status != 200 || err != nil {
+		fmt.Println(status, err)
+		return
+	}
+	fmt.Println(delete_topic.Notice)
 }

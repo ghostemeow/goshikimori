@@ -109,6 +109,36 @@ type Result interface {
 	OptionsTopicsHotV2()     string
 }
 
+// Topic parameters for creating/updating a topic.
+//
+// Required for [Configuration.CreateTopic]:
+//   - Body: topic text;
+//   - Forum_id: forum id, can be found in SearchForums();
+//   - Title: topic title;
+//   - User_id: your id, can be found in WhoAmi() or FastIdUser();
+//
+// Optional:
+//
+//   - Linked_id and Linked_type are only used together:
+//
+//     > TOPIC_LINKED_TYPE_ANIME, TOPIC_LINKED_TYPE_MANGA, TOPIC_LINKED_TYPE_RANOBE,
+//     TOPIC_LINKED_TYPE_CHARACTER, TOPIC_LINKED_TYPE_PERSON, TOPIC_LINKED_TYPE_CLUB,
+//     TOPIC_LINKED_TYPE_CLUBPAGE, TOPIC_LINKED_TYPE_CRITIQUE, TOPIC_LINKED_TYPE_REVIEW,
+//     TOPIC_LINKED_TYPE_CONTEST, TOPIC_LINKED_TYPE_COSPLAYGALLYRY,
+//     TOPIC_LINKED_TYPE_COLLECTION, TOPIC_LINKED_TYPE_ARTICLE;
+//
+//   - Type: defaults to TOPIC_TYPE for [Configuration.CreateTopic],
+//     must not be set for [Configuration.UpdateTopic].
+type TopicParams struct {
+	Body        string `json:"body,omitempty"`
+	Forum_id    int    `json:"forum_id,omitempty"`
+	Linked_id   int    `json:"linked_id,omitempty"`
+	Linked_type string `json:"linked_type,omitempty"`
+	Title       string `json:"title,omitempty"`
+	Type        string `json:"type,omitempty"`
+	User_id     int    `json:"user_id,omitempty"`
+}
+
 // TODO: (ghostemeow) abandon url.QueryEscape in the future.
 func encodeParamEscaped(key, value string) string {
 	return url.QueryEscape(key) + "=" + url.QueryEscape(value)

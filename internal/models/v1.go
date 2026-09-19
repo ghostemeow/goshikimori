@@ -821,6 +821,10 @@ type TopicsId struct {
 	Last_comment_viewed bool        `json:"last_comment_viewed"`
 }
 
+type TopicNotice struct {
+	Notice string `json:"notice"`
+}
+
 type Character struct {
 	Id                int               `json:"id"`
 	Name              string            `json:"name"`

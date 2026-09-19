@@ -310,3 +310,47 @@ func NewDeleteRequestWithCancel(application, accessToken, search string, number 
 
 	return data, status, nil
 }
+
+// Create topic: POST request. To work correctly with the POST method,
+// make sure that your application has the 'topics' oauth scope.
+func NewCreateTopicPostRequestWithCancel(application, accessToken, search string, body []byte, number time.Duration) ([]byte, int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), number)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, search, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, -1, err
+	}
+	req.Header.Add("User-Agent", application)
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
+	req.Header.Set("Content-Type", "application/json")
+
+	data, status, err := sendRequest(req)
+	if err != nil {
+		return nil, status, err
+	}
+
+	return data, status, nil
+}
+
+// Update topic: PATCH request. To work correctly with the PATCH method,
+// make sure that your application has the 'topics' oauth scope.
+func NewUpdateTopicPatchRequestWithCancel(application, accessToken, search string, body []byte, number time.Duration) ([]byte, int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), number)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, search, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, -1, err
+	}
+	req.Header.Add("User-Agent", application)
+	req.Header.Add("Authorization", concatenation.Bearer(accessToken))
+	req.Header.Set("Content-Type", "application/json")
+
+	data, status, err := sendRequest(req)
+	if err != nil {
+		return nil, status, err
+	}
+
+	return data, status, nil
+}

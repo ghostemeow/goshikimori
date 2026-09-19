@@ -3212,6 +3212,123 @@ func (c *Configuration) RemoveIgnoreTopic(id int) (models.IgnoreTopic, int, erro
 	return i, status, nil
 }
 
+// In SetConfiguration(), you must specify the application and the token.
+//
+// Requires the 'topics' oauth scope.
+//
+// Topic: topic parameters, for the required/optional fields see [TopicParams].
+//
+// Returns a status of 201.
+//
+// More information can be found in the [example].
+//
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/topics
+func (c *Configuration) CreateTopic(t TopicParams) (models.TopicsId, int, error) {
+	var tpc models.TopicsId
+
+	if t.Type == "" {
+		t.Type = constants.TOPIC_TYPE
+	}
+
+	body, err := json.Marshal(struct {
+		Topic TopicParams `json:"topic"`
+	}{Topic: t})
+	if err != nil {
+		return tpc, -1, err
+	}
+
+	data, status, err := request.NewCreateTopicPostRequestWithCancel(
+		c.Application, c.AccessToken,
+		// 26(constants.SITE) + 6(topics)
+		concatenation.Url(32, []string{constants.SITE, "topics"}),
+		body, constants.MAX_EXPECTATION,
+	)
+	if err != nil {
+		return tpc, status, err
+	}
+
+	if err := json.Unmarshal(data, &tpc); err != nil {
+		return tpc, status, err
+	}
+
+	return tpc, status, nil
+}
+
+// In SetConfiguration(), you must specify the application and the token.
+//
+// Requires the 'topics' oauth scope.
+//
+// Id: topic id, can be found in SearchTopics(), SearchTopicsUpdates(), SearchTopicsHot().
+//
+// Topic: topic parameters, only the filled fields are updated.
+//
+// Returns a status of 200.
+//
+// More information can be found in the [example].
+//
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/topics
+func (c *Configuration) UpdateTopic(id int, t TopicParams) (models.TopicsId, int, error) {
+	var tpc models.TopicsId
+
+	str_id := strconv.Itoa(id)
+
+	body, err := json.Marshal(struct {
+		Topic TopicParams `json:"topic"`
+	}{Topic: t})
+	if err != nil {
+		return tpc, -1, err
+	}
+
+	data, status, err := request.NewUpdateTopicPatchRequestWithCancel(
+		c.Application, c.AccessToken,
+		// 26(constants.SITE) + 7(topics/) + ?(id)
+		concatenation.Url(33+len(str_id), []string{constants.SITE, "topics/", str_id}),
+		body, constants.MAX_EXPECTATION,
+	)
+	if err != nil {
+		return tpc, status, err
+	}
+
+	if err := json.Unmarshal(data, &tpc); err != nil {
+		return tpc, status, err
+	}
+
+	return tpc, status, nil
+}
+
+// In SetConfiguration(), you must specify the application and the token.
+//
+// Requires the 'topics' oauth scope.
+//
+// Id: topic id, can be found in SearchTopics(), SearchTopicsUpdates(), SearchTopicsHot().
+//
+// Returns a status of 200.
+//
+// More information can be found in the [example].
+//
+// [example]: https://github.com/ghostemeow/goshikimori/blob/master/examples/topics
+func (c *Configuration) DeleteTopic(id int) (models.TopicNotice, int, error) {
+	var tn models.TopicNotice
+
+	str_id := strconv.Itoa(id)
+
+	data, status, err := request.NewDeleteRequestWithCancel(
+		c.Application, c.AccessToken,
+		// 26(constants.SITE) + 7(topics/) + ?(id)
+		concatenation.Url(33+len(str_id), []string{constants.SITE, "topics/", str_id}),
+		constants.MAX_EXPECTATION,
+	)
+	if err != nil {
+		return tn, status, err
+	}
+
+	if err := json.Unmarshal(data, &tn); err != nil {
+		return tn, status, err
+	}
+
+	return tn, status, nil
+}
+
 // Only the application needs to be specified in SetConfiguration().
 //
 // Query: customized request built by AnimeSchema or similar.

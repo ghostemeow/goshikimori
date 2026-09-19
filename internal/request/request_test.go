@@ -366,3 +366,114 @@ func TestNewDeleteMessageDeleteRequestWithCancel(t *testing.T) {
 		t.Error("expected empty body on 204")
 	}
 }
+
+func TestNewCreateTopicPostRequestWithCancel(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if header := r.Header.Get("User-Agent"); header != "test-app" {
+			t.Errorf("invalid User-Agent: %s", header)
+		}
+		if auth := r.Header.Get("Authorization"); !strings.HasPrefix(auth, "Bearer ") {
+			t.Errorf("missing/invalid Authorization: %s", auth)
+		}
+		if header := r.Header.Get("Content-Type"); header != "application/json" {
+			t.Errorf("invalid Content-Type: %s", header)
+		}
+		body, _ := io.ReadAll(r.Body)
+		var payload struct {
+			Topic struct {
+				Body     string `json:"body"`
+				ForumID  int    `json:"forum_id"`
+				LinkedID int    `json:"linked_id,omitempty"`
+				Title    string `json:"title"`
+				Type     string `json:"type"`
+				UserID   int    `json:"user_id"`
+			} `json:"topic"`
+		}
+		if err := json.Unmarshal(body, &payload); err != nil {
+			t.Errorf("invalid json: %s", err.Error())
+		}
+		if payload.Topic.Body != "test body" {
+			t.Errorf("wrong body: %s", payload.Topic.Body)
+		}
+		if payload.Topic.ForumID != 1 {
+			t.Errorf("expected forum_id=1, got %d", payload.Topic.ForumID)
+		}
+		if payload.Topic.Title != "test title" {
+			t.Errorf("wrong title: %s", payload.Topic.Title)
+		}
+		if payload.Topic.Type != "Topic" {
+			t.Errorf("expected type=Topic, got %s", payload.Topic.Type)
+		}
+		if payload.Topic.UserID != 23456791 {
+			t.Errorf("expected user_id=23456791, got %d", payload.Topic.UserID)
+		}
+		w.WriteHeader(http.StatusCreated)
+		_, _ = w.Write([]byte(`{"id": 270126, "topic_title": "test title", "body": "test body"}`))
+	}))
+	defer server.Close()
+
+	data, status, err := NewCreateTopicPostRequestWithCancel(
+		"test-app", "test-token", server.URL,
+		[]byte(`{"topic":{"body":"test body","forum_id":1,"title":"test title","type":"Topic","user_id":23456791}}`),
+		5*time.Second,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if status != 201 {
+		t.Errorf("expected 201, got %d", status)
+	}
+	if !strings.Contains(string(data), `"id": 270126`) {
+		t.Errorf("invalid response body: %s", string(data))
+	}
+}
+
+func TestNewUpdateTopicPatchRequestWithCancel(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if header := r.Header.Get("User-Agent"); header != "test-app" {
+			t.Errorf("invalid User-Agent: %s", header)
+		}
+		if auth := r.Header.Get("Authorization"); !strings.HasPrefix(auth, "Bearer ") {
+			t.Errorf("missing/invalid Authorization: %s", auth)
+		}
+		if header := r.Header.Get("Content-Type"); header != "application/json" {
+			t.Errorf("invalid Content-Type: %s", header)
+		}
+		body, _ := io.ReadAll(r.Body)
+		var payload struct {
+			Topic struct {
+				Body string `json:"body"`
+			} `json:"topic"`
+		}
+		if err := json.Unmarshal(body, &payload); err != nil {
+			t.Errorf("invalid json: %s", err.Error())
+		}
+		if payload.Topic.Body != "blablalbla" {
+			t.Errorf("wrong body: %s", payload.Topic.Body)
+		}
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"id": 270122, "body": "blablalbla"}`))
+	}))
+	defer server.Close()
+
+	data, status, err := NewUpdateTopicPatchRequestWithCancel(
+		"test-app", "test-token", server.URL,
+		[]byte(`{"topic":{"body":"blablalbla"}}`),
+		5*time.Second,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if status != 200 {
+		t.Errorf("expected 200, got %d", status)
+	}
+	if !strings.Contains(string(data), `"id": 270122`) {
+		t.Errorf("invalid response body: %s", string(data))
+	}
+}
